@@ -21,6 +21,7 @@ namespace Santiago{ namespace Authentication
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
         //check for error and do cleanup.
+        int readSize;
         if(error_)
         {
             close();
@@ -40,6 +41,8 @@ namespace Santiago{ namespace Authentication
             {
                 ConnectionMessage message(myString);
                 _onMessageCallbackFn(message);
+                // std::function<void(unsigned)> onDisconnectCallbackFn = 
+                //   std::bind(&Server::handleDisconnect,this,_nextConnectionId);
             }
             else
             {

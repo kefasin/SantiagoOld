@@ -13,6 +13,8 @@ namespace Santiago{ namespace Authentication
 
         typedef TCPConnection::Ptr TCPConnectionPtr;
 
+        //  typedef UserController::Ptr UserControllerPtr;
+
         Server(boost::asio::io_service& ioService_,int port_)
             :_acceptor(ioService_, tcp::endpoint(tcp::v4(),port_),_nextConnectionId(1))
         {

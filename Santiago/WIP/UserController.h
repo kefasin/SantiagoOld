@@ -2,7 +2,8 @@
 #define SANTIAGO_AUTHENTICATION_USERCONTROLLER_H
 
 #include <function>
-
+#include <ctime>
+#include "Database/MariaDBConnections.h"
 #include "Message.h"
 
 namespace Santiago{ namespace Authentication
@@ -13,13 +14,14 @@ namespace Santiago{ namespace Authentication
     public:
 
         typedef std::function<boost::asio::error_code(ServerMessage)> SendMessageCallbackFn;
+        //  typedef std::shared_ptr<UserController> Ptr;
 
         UserController(SendMessageCallbackFn sendMessageCallbackFn_)
             :_sendMessageCallbackFn(sendMessageCallbackFn_)
         {}
 
         void handleClientMessage(const ServerMessage& serverMessage_)
-        {
+        //{
             //here make a large switch of message type,
             //parse the parameter strings into integers for relevant cases, 
             //redirect to different functions for each of the message type
@@ -35,7 +37,7 @@ namespace Santiago{ namespace Authentication
                  //so on
               }
              */
-        }
+        //  }
 
     protected:
 
@@ -49,6 +51,7 @@ namespace Santiago{ namespace Authentication
         SendMessageCallbackFn                   _sendMessageCallbackFn;
         std::map<std::string,std::string>       _userIdCookieMap;
         std::map<std::string,std::vector<std::pair<TCPConnection::pointer,std::string>>> _userIdConnectionPtrCookiePairMap;
+        MariaDBConnections _databaseConnector;
 
     };
 
