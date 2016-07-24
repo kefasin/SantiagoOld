@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 project (Santiago)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
+
+if (WIN32)
+add_definitions (-D__WIN__ -D_CRT_SECURE_NO_WARNINGS)
+set(BOOST_ROOT "C:/Program Files/boost/boost_1_52_0")
+include_directories(${BOOST_ROOT})
+set(BOOST_LIBRARYDIR "C:/Program Files/boost/boost_1_52_0/stage/lib")
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+endif (WIN32)
+
 #commands specific to unix
 if (UNIX)
 add_definitions (-D__UNIX__)
@@ -15,5 +27,12 @@ find_package(Boost COMPONENTS thread system REQUIRED)
 include_directories( ${Boost_INCLUDE_DIR}/../ )
 set(Boost_LIBRARIES ${Boost_LIBRARIES} pthread)
 
-add_subdirectory (test)
+#TODO:Add MariaDB find_package(), include_directories() here
+#     May need to add a cmakemodule
 
+include_directories (${CMAKE_SOURCE_DIR}/src/lib)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+add_subdirectory (src)

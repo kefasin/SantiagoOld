@@ -20,7 +20,7 @@
 
 #include <boost/asio.hpp>
 
-#include "Santiago/Fastcgi/Acceptor.h"
+#include "Fastcgi/Acceptor.h"
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 
