@@ -2,6 +2,7 @@
 
 namespace Santiago{ namespace Authentication
 {
+
     TCPConnection(const MySocketPtr& socketPtr_,
                   const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                   const OnMessageCallbackFn& onMessageCallbackFn_)
@@ -17,6 +18,13 @@ namespace Santiago{ namespace Authentication
                       boost::asio::placeholders::error,
                       boost::asio::placeholders::bytes_transferred));
     }
+
+    /* 
+      1) Pls try and fully understand Fastcgi::handleRead before writing this fn.
+      2) Pls add check to ensure that all the bytes reqd are there before reading from input buffer
+      3) Use boost::asio::buffer_cast to peek into buffer data before moving to std::string
+      4) strtol will not work in this circumstance. Use reinterpret_cast. see Fastcgi::hangleRead for examples
+     */
     
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
