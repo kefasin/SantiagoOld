@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/FastcgiEcho.dir/Echo.cpp.o  -o ../../../../testbin/FastcgiEcho -rdynamic ../../lib/Fastcgi/libFastcgi.a -lboost_thread -lboost_system -lboost_chrono -lboost_date_time -lboost_atomic -lpthread -lpthread 

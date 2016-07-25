@@ -1,7 +1,8 @@
 #ifndef SANTIAGO_AUTHENTICATION_SERVER_H
 #define SANTIAGO_AUTHENTICATION_SERVER_H
 
-#include <boost/asio/accector.hpp>
+#include <boost/asio/acceptor.hpp>
+#include <boost/asio/error.hpp>
 
 #include "TCPConnection.h"
 

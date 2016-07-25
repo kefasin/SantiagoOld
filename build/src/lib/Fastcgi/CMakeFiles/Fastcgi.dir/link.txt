@@ -1,0 +1,2 @@
+/usr/bin/ar qc libFastcgi.a  CMakeFiles/Fastcgi.dir/Dummy.cpp.o
+/usr/bin/ranlib libFastcgi.a

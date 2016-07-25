@@ -1,0 +1,2 @@
+/usr/bin/ar qc libAuthentication.a  CMakeFiles/Authentication.dir/TCPConnection.cpp.o CMakeFiles/Authentication.dir/Message.cpp.o CMakeFiles/Authentication.dir/Server.cpp.o CMakeFiles/Authentication.dir/UserController.cpp.o
+/usr/bin/ranlib libAuthentication.a

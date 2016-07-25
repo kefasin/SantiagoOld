@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
-
+#include <map>
+#include <sstream>
+#include <string>
 namespace Santiago{ namespace Authentication
 {
     enum class MessageType
@@ -32,7 +34,7 @@ namespace Santiago{ namespace Authentication
         {}
 
         std::string getMessageString() const;
-
+        
         MessageType               _type;
         std::vector<std::string>  _parameters;
     };

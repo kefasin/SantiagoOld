@@ -3,7 +3,7 @@
 namespace Santiago{ namespace Authentication
 {
 
-    TCPConnection(const MySocketPtr& socketPtr_,
+    TCPConnection::TCPConnection(const MySocketPtr& socketPtr_,
                   const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                   const OnMessageCallbackFn& onMessageCallbackFn_)
         :_socketPtr(socketPtr_)
@@ -28,48 +28,58 @@ namespace Santiago{ namespace Authentication
     
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
-        //check for error and do cleanup.
-        int readSize;
+        _inputBuffer.commit(bytesTransferred_);
         if(error_)
         {
+            //check for error and do cleanup.
             close();
         }
-
-        //format of the input <no_of_bytes><1 space><input bytes to be parsed ConnectionMessage::ConnectionMessage(std::string)>
-        while(1)
+        else
         {
-            // boost::asio::read(_socketPtr, _inputBuffer, 
-            //  boost::asio::transfer_exactly(4),boost::system::error_code& error);
-            std::string myString;  
-            
-            // Convert streambuf to std::string  
-            std::istream(&_inputBuffer) >> myString; 
-            unsigned readSize=intReceive(myString.substr(0,32));
-            if(readSize >_inputBuffer.size())
+            while (true)
             {
-                ConnectionMessage message(myString);
-                _onMessageCallbackFn(message);
-                // std::function<void(unsigned)> onDisconnectCallbackFn = 
-                //   std::bind(&Server::handleDisconnect,this,_nextConnectionId);
+                const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
+                unsigned contentSize = *(int*)inputBufferData;
+                
+                if(_inputBuffer.size() >= 4)
+                {
+                    //  std::string myString(inputBufferData);
+                    //  std::string size = myString.substr(0,4);
+                    //  unsigned contentSize = *(int*)size.c_str();    
+                    _inputBuffer.consume(4);
+                    const char* content = inputBufferData + 4;
+                    contentSize -=4;
+                    while(contentSize >= _inputBuffer.size())
+                    { 
+                        std::string myString(content);
+                        _inputBuffer.consume(contentSize-4);
+                        ConnectionMessage message(myString);
+                        _onMessageCallbackFn(message);
+                    }
+                   
+                        break;
+                }
+                else
+                {
+                    break;
+                }
+                
+                //do the processing in a while loop
+                //and for each complete case call the onMessageCallbackFn        
+                //in the end chain the asyc_read_some call. 
+                
             }
-            else
-            {
-                break;
-            }
-            //do the processing in a while loop
-            //and for each complete case call the onMessageCallbackFn        
-            //in the end chain the asyc_read_some call. 
-            
-        }       
+        }
         
-        _socketPtr.async_read_some(
-            boost::asio::buffer(_inputBuffer),
-            boost::bind(&TCPConnection::handleRead, shared_from_this(),
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+        _socketPtr->async_read_some(
+            _inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
+            std::bind(&TCPConnection::handleRead,
+                      this->shared_from_this(),
+                      boost::asio::placeholders::error,
+                      boost::asio::placeholders::bytes_transferred));
         
     }
-
+    
     unsigned TCPConnection:: intReceive(std::string str)
     {
         unsigned num;

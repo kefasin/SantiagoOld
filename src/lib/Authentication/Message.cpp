@@ -15,45 +15,49 @@ namespace Santiago{ namespace Authentication
     ConnectionMessage::ConnectionMessage(const std::string& inputString_)
     {
         int size = inputString_.size();
-        std::string typeString = inputString_.substr(32, 32);
+        std::string typeString = inputString_.substr(4, 4);
         std::map<int, MessageType> type;
         type = {{65, MessageType::NEW_USER}, {66, MessageType::LOGIN_USER},
                 {67, MessageType::LOGOUT_USER},
                 {68, MessageType::CHANGE_PASS_USER},
                 {69, MessageType::CHANGE_PASS_AND_LOGOUT_USER},
                 {70, MessageType::VERIFY_USER}};
-        _type = type.find(intReceive(typeString)) -> second;
-        std::string parametersNumString = inputString_.substr(64, 32);
-        int parametersNum = intReceive(parametersNumString);
-        int startPos = 96;
+        _type = type.find(*(int*)typeString.c_str())->second;
+        // std::string parametersNumString = inputString_.substr(8, 4);
+        //  int parametersNum = *(int*)parametersNumString.c_str();
+        int startPos = 12;
         while(startPos < size)
         {
-            std::string parameterSizeString = inputString_.substr(startPos, 32);
-            int parameterSize = intReceive(parameterSizeString);
-            startPos += 32;
+            std::string parameterSizeString = inputString_.substr(startPos, 4);
+            int parameterSize = *(int*)parameterSizeString.c_str();
+            startPos += 4;
             std::string parameter = inputString_.substr(startPos, parameterSize);
             _parameters.push_back(parameter);
             startPos += parameterSize;
         }
         
     }
-    
-    std::string::ConnectionMessage getMessageString() const
+      
+    std::string ConnectionMessage::getMessageString() const
     {
-        //TODO: Pls remove the first sizeOfString here. Better to add that in the TCPConnection since the ConnectionMessage() constructor takes the string without that.
         std::vector<std::string>::iterator it;
-        std::string messageString = "";
-        int size = 96;   //No.of characters in string + Message Type(enum) + No.of parameters
+        std::stringstream messageString;
+        std::map<MessageType, int> enumType;
+        enumType = {{MessageType::NEW_USER, 65},
+                {MessageType::LOGIN_USER, 66},
+                {MessageType::LOGOUT_USER, 67},
+                {MessageType::CHANGE_PASS_USER, 68},
+                {MessageType::CHANGE_PASS_AND_LOGOUT_USER, 69},
+                {MessageType::VERIFY_USER, 70}};
+        int type = enumType.find(_type)->second;
+        messageString.write((const char*)&type, sizeof(type));
+        messageString.write((const char*)&(_parameters.size()), sizeof(_parameters.size()));
         for(it = _parameters.begin(); it != _parameters.end(); ++it)
         {
-            size += 32 + (*it).size(); 
+            it size = *it.size();
+            messageString.write((const char*)&(size), sizeof(size));
+            messageString << *it; 
         }
-        messageString += intSend(size) + intSend(_type) + intSend(_parameters.size());
-        for(it = _parameters.begin(); it != _parameters.end(); ++it)
-        {
-            messageString += intSend((*it).size()) + *it; 
-        }
-        return messageString;
+        return messageString.str();
     }
-
 }}//closing Santiago::Authentication 

@@ -1,7 +1,8 @@
-set(Authentication_SRCS Message.cpp Server.cpp TCPConnection.cpp UserController.cpp)
+set(Authentication_SRCS TCPConnection.cpp
+Message.cpp Server.cpp  UserController.cpp)
 
 if(WIN32)
-  set(Authentication_SRCS ${fastcgi_devkit_SRCS}
+  set(Authentication_SRCS ${Authentication_SRCS}
     Message.h
     Server.h
     TCPConnection.h

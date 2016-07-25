@@ -20,7 +20,7 @@ namespace Santiago{ namespace Authentication
     class TCPConnection: public boost::enable_shared_from_this<TCPConnection>
     {
     public:
-
+        static const uint BUFFER_INCREMENT_SIZE = 4096;
         typedef std::shared_ptr<TCPConnection> Ptr;
         typedef boost::asio::ip::tcp::socket MySocket;
         typedef std::shared_ptr<MySocket> MySocketPtr;
@@ -51,3 +51,4 @@ namespace Santiago{ namespace Authentication
 }} //closing namespace Santiango::Authentication
 
 #endif
+
