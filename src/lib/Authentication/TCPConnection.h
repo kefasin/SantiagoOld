@@ -33,8 +33,7 @@ namespace Santiago{ namespace Authentication
                       const OnMessageCallbackFn& onMessageCallbackFn_);
 
         boost::system::error_code sendMessage(const ConnectionMessage& message_);
-        void close(); //cleanup including call to onDisconnectCallbackFn.implement in .cpp
-        unsigned intReceive(std::string);  // new function for reading size of buffer,converts std::string to unsigned
+        void close(); //cleanup including call to onDisconnectCallbackFn.implement in .cppx
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);
@@ -44,7 +43,6 @@ namespace Santiago{ namespace Authentication
         OnMessageCallbackFn                     _onMessageCallbackFn;
 
         boost::asio::streambuf                  _inputBuffer;
-        bool                                    _readFlag;
 };
 
 
