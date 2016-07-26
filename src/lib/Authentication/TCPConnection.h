@@ -44,6 +44,7 @@ namespace Santiago{ namespace Authentication
         OnMessageCallbackFn                     _onMessageCallbackFn;
 
         boost::asio::streambuf                  _inputBuffer;
+        bool                                    _readFlag;
 };
 
 
