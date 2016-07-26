@@ -1,5 +1,5 @@
-set(Authentication_SRCS TCPConnection.cpp
-Message.cpp Server.cpp  UserController.cpp)
+set(Authentication_SRCS Message.cpp
+TCPConnection.cpp Server.cpp  UserController.cpp)
 
 if(WIN32)
   set(Authentication_SRCS ${Authentication_SRCS}

@@ -11,6 +11,7 @@
 #include <boost/asio/streambuf.hpp>
 
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "Message.h"
