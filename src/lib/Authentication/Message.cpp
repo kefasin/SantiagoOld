@@ -23,14 +23,18 @@ namespace Santiago{ namespace Authentication
                 {68, MessageType::CHANGE_PASS_USER},
                 {69, MessageType::CHANGE_PASS_AND_LOGOUT_USER},
                 {70, MessageType::VERIFY_USER}};
-        _type = type.find(*(int*)typeString.c_str())->second;
-        // std::string parametersNumString = inputString_.substr(8, 4);
-        //  int parametersNum = *(int*)parametersNumString.c_str();
+        const int *temp = reinterpret_cast<const int*>(typeString.c_str());
+        int typeNum = *temp;
+        _type = type.find(typeNum)->second;
+        /*std::string parametersNumString = inputString_.substr(8, 4);
+        const int *temp2 = reinterpret_cast<const int*>(parameterString.c_str());
+        int parameterNum = *temp;*/
         int startPos = 12;
         while(startPos < size)
         {
             std::string parameterSizeString = inputString_.substr(startPos, 4);
-            int parameterSize = *(int*)parameterSizeString.c_str();
+            const int *tmp = reinterpret_cast<const int*>(parameterSizeString.c_str());
+            int parameterSize = *tmp;
             startPos += 4;
             std::string parameter = inputString_.substr(startPos, parameterSize);
             _parameters.push_back(parameter);
@@ -51,8 +55,8 @@ namespace Santiago{ namespace Authentication
                     {MessageType::VERIFY_USER, 70}};
         int type = enumType.find(_type)->second;
         messageString.write((const char*)&type, sizeof(type));
-        int parasize = _parameters.size();
-        messageString.write((const char*)&(parasize), sizeof(parasize));
+        int parameterSize = _parameters.size();
+        messageString.write((const char*)&(parameterSize), sizeof(parameterSize));
         for(auto it = _parameters.begin(); it != _parameters.end(); ++it)
         {
             int size = (*it).size();
