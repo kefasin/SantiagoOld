@@ -32,8 +32,7 @@ namespace Santiago{ namespace Authentication
             while (bufferSize)
             {
                 const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
-                const int *temp = reinterpret_cast<const int *>(inputBufferData);
-                unsigned messageStringSize = *temp;
+                unsigned messageStringSize = *(reinterpret_cast<const unsigned*>(inputBufferData));
                 if(bufferSize >= messageStringSize)
                 {
                     std::string myString( reinterpret_cast<char const*>(inputBufferData+4), messageStringSize-4);

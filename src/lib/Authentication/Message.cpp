@@ -1,4 +1,4 @@
-#include "Message.h"
+#include "Authentication/Message.h"
 
 namespace Santiago{ namespace Authentication
 {
@@ -15,7 +15,7 @@ namespace Santiago{ namespace Authentication
     ConnectionMessage::ConnectionMessage(const std::string& inputString_)
     {
         int size = inputString_.size();
-        std::string typeString = inputString_.substr(4, 4);
+        std::string typeString = inputString_.substr(0, 4); //substr(4, 4) if no.of bytes is there in inputString_
         std::map<int, MessageType> type;
         type = {{65, MessageType::NEW_USER},
                 {66, MessageType::LOGIN_USER},
@@ -23,18 +23,16 @@ namespace Santiago{ namespace Authentication
                 {68, MessageType::CHANGE_PASS_USER},
                 {69, MessageType::CHANGE_PASS_AND_LOGOUT_USER},
                 {70, MessageType::VERIFY_USER}};
-        const int *temp = reinterpret_cast<const int*>(typeString.c_str());
-        int typeNum = *temp;
+        int typeNum = *(reinterpret_cast<const unsigned*>(typeString.c_str()));
         _type = type.find(typeNum)->second;
-        /*std::string parametersNumString = inputString_.substr(8, 4);
-        const int *temp2 = reinterpret_cast<const int*>(parameterString.c_str());
-        int parameterNum = *temp;*/
-        int startPos = 12;
+        //if no.of parameters is required
+        /*std::string parametersNumString = inputString_.substr(4, 4); //substr(8, 4) if no.of bytes is there in inputString_
+          int parameterNum = *(reinterpret_cast<const unsigned*>(parametersNumString.c_str()))*/
+        int startPos = 8; //startPos = 12 if no.of bytes is there in inputString_
         while(startPos < size)
         {
-            std::string parameterSizeString = inputString_.substr(startPos, 4);
-            const int *tmp = reinterpret_cast<const int*>(parameterSizeString.c_str());
-            int parameterSize = *tmp;
+            std::string parameterSizeString = inputString_.substr(startPos, 4);            
+            int parameterSize = *(reinterpret_cast<const unsigned*>(parameterSizeString.c_str()));
             startPos += 4;
             std::string parameter = inputString_.substr(startPos, parameterSize);
             _parameters.push_back(parameter);
@@ -54,13 +52,13 @@ namespace Santiago{ namespace Authentication
                     {MessageType::CHANGE_PASS_AND_LOGOUT_USER, 69},
                     {MessageType::VERIFY_USER, 70}};
         int type = enumType.find(_type)->second;
-        messageString.write((const char*)&type, sizeof(type));
+        messageString.write(reinterpret_cast<char*>(&type), sizeof(int));
         int parameterSize = _parameters.size();
-        messageString.write((const char*)&(parameterSize), sizeof(parameterSize));
+        messageString.write(reinterpret_cast<char*>(&parameterSize), sizeof(int));
         for(auto it = _parameters.begin(); it != _parameters.end(); ++it)
         {
             int size = (*it).size();
-            messageString.write((const char*)&(size), sizeof(size));
+            messageString.write(reinterpret_cast<char*>(&size), sizeof(int));
             messageString << *it; 
         }
         return messageString.str();
