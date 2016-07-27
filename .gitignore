@@ -5,8 +5,4 @@
 *.gch
 *.cpp#
 build/
-CMakeFiles/
-CMake*
-#*
-cmake*
-Makefile
+
