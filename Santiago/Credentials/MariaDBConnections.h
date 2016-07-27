@@ -1,60 +1,33 @@
+#ifndef MARIADBCONNECTIONS_H
+#define MARIADBCONNECTIONS_H
+
+#include "Database/Records.h"
 #include <mysql.h>
 #include <iostream>
-#include <cstring>
 #include <vector>
-#include <ctime>
 #include <sstream>
 #include <map>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/gregorian/gregorian.hpp>
 
-using namespace boost::posix_time;
-using namespace boost::gregorian;
-
-class MariaDBConnections
+namespace Santiago{ namespace Database
 {
-    int _userProfileId, _sessionId, _permissionId;
-
-public:
-    enum UserPermission
+    class MariaDBConnections
     {
-        READ,
-        WRITE,
-        READ_WRITE
-    };
-
-    std::map<UserPermission, std::string> _permission;
-
-    struct UserProfile
-    {
-        int _id;
-        std::string _userName;
-        std::string _password;
-    };
-
-    struct Session
-    {
-        int _id;
-        std::string _userName;
-        std::string _cookieId;
-        ptime _loginTime;
-        ptime _logoutTime;
+    public:
+        std::map<Records::UserPermission, std::string> _permission;
         
-    };
+        MariaDBConnections();
+        bool addUserProfileRecord(const std::string, const std::string);
+        bool updateUserPassword(const std::string, const std::string, const std::string);
+        bool addSessionRecord(const std::string, const std::string, ptime);
+        bool updateSessionRecord(const std::string, ptime);
+        bool addPermissionRecord(int, const std::string, Records::UserPermission);
+        std::vector<Records::UserProfile> getUserProfileRecord();
+        std::vector<Records::Session> getSessionRecord();
+        std::vector<Records::Permission> getPermissionRecord();
 
-    struct Permission
-    {
-        int _id;
-        std::string _resId;
-        std::string _userName;
-        UserPermission  _userPermission;
+    private:
+        int _userProfileId, _sessionId, _permissionId;
     };
-    
-    MariaDBConnections();
-    bool addUserProfileRecord(std::string, std::string);
-    bool addSessionRecord(std::string, std::string, ptime, ptime);
-    bool addPermissionRecord(int, std::string, UserPermission);
-    std::vector<MariaDBConnections::UserProfile> getUserProfileRecord();
-    std::vector<MariaDBConnections::Session> getSessionRecord();
-    std::vector<MariaDBConnections::Permission> getPermissionRecord(); 
-}; 
+}}
+
+#endif
