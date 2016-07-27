@@ -1,4 +1,4 @@
-#include "Authentication/Message.h"
+#include "Message.h"
 
 namespace Santiago{ namespace Authentication
 {

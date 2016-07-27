@@ -62,5 +62,5 @@ namespace Santiago{ namespace Authentication
         _onDisconnectCallbackFn();
     } 
     
-    }      //closing namespace Santiago::Authentication
+    }     //closing namespace Santiago::Authentication
 }

@@ -1,10 +1,12 @@
 #ifndef SANTIAGO_AUTHENTICATION_USERCONTROLLER_H
 #define SANTIAGO_AUTHENTICATION_USERCONTROLLER_H
 
-#include <function>
+#include <functional>
 #include <ctime>
 #include "Database/MariaDBConnections.h"
 #include "Message.h"
+#include "TCPConnection.h"
+
 
 namespace Santiago{ namespace Authentication
 {
@@ -13,32 +15,17 @@ namespace Santiago{ namespace Authentication
 
     public:
 
-        typedef std::function<boost::asio::error_code(ServerMessage)> SendMessageCallbackFn;
-        //  typedef std::shared_ptr<UserController> Ptr;
-
+        typedef std::function<boost::system::error_code(ServerMessage)> SendMessageCallbackFn;
+       
         UserController(SendMessageCallbackFn sendMessageCallbackFn_)
             :_sendMessageCallbackFn(sendMessageCallbackFn_)
         {}
 
-        void handleClientMessage(const ServerMessage& serverMessage_)
-        //{
+        void handleClientMessage(const ServerMessage& serverMessage_);
             //here make a large switch of message type,
             //parse the parameter strings into integers for relevant cases, 
             //redirect to different functions for each of the message type
-            //something like
-            /*
-              switch(serverMessage_._connectionMessage._type)
-              {
-                 case NEW_USER:
-                    addNewUser(serverMessage_._connectionMessage._parameters[0],
-                               serverMessage_._connectionMessage._parameters[1]);
-                 case LOGIN_USER;
-                    loginUser(..,..);
-                 //so on
-              }
-             */
-        //  }
-
+           
     protected:
 
         void addNewUser(const std::string& userId_, const std::string& password_);
@@ -52,8 +39,8 @@ namespace Santiago{ namespace Authentication
 
         SendMessageCallbackFn                   _sendMessageCallbackFn;
         std::map<std::string,std::string>       _userIdCookieMap;
-        std::map<std::string,std::vector<std::pair<TCPConnection::pointer,std::string>>> _userIdConnectionPtrCookiePairMap;
-        MariaDBConnections _databaseConnector;
+        std::map<std::string,std::vector<std::pair<TCPConnection::Ptr,std::string>>> _userIdConnectionPtrCookiePairMap;
+        MariaDBConnections 			_databaseConnector;
 
     };
 
