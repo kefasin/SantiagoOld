@@ -1,4 +1,4 @@
-#include "Database/MariaDBConnections.h"
+#include "MariaDBConnections.h"
 
 namespace Santiago{ namespace Database
 {
@@ -101,9 +101,9 @@ namespace Santiago{ namespace Database
         _permissionId = atoi(row3[0]);
         
         _permission =
-            {{Records::UserPermission::READ, "READ"},
-             {Records::UserPermission::WRITE, "WRITE"},
-             {Records::UserPermission::READ_WRITE, "READ_WRITE"}};
+            {{UserPermission::READ, "READ"},
+             {UserPermission::WRITE, "WRITE"},
+             {UserPermission::READ_WRITE, "READ_WRITE"}};
     }
     
     bool MariaDBConnections::addUserProfileRecord(const std::string userName_, const std::string password_)
@@ -314,7 +314,7 @@ namespace Santiago{ namespace Database
     
     bool MariaDBConnections::addPermissionRecord(int resId_,
                                                  std::string userName_,
-                                                 Records::UserPermission permission_)
+                                                 UserPermission permission_)
     {
         MYSQL* con = mysql_init(NULL);
         if (con == NULL) 
@@ -349,9 +349,9 @@ namespace Santiago{ namespace Database
         return 1;
     }
     
-    std::vector<Records::UserProfile> MariaDBConnections::getUserProfileRecord()
+    std::vector<UserProfile> MariaDBConnections::getUserProfileRecord()
     {
-        std::vector<Records::UserProfile> empty = {};
+        std::vector<UserProfile> empty = {};
         
         MYSQL* con = mysql_init(NULL);
         if (con == NULL) 
@@ -382,8 +382,8 @@ namespace Santiago{ namespace Database
         
         int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
-        Records::UserProfile record;
-        std::vector<Records::UserProfile> records;
+        UserProfile record;
+        std::vector<UserProfile> records;
         
         while ((row = mysql_fetch_row(result))) 
         { 
@@ -399,9 +399,9 @@ namespace Santiago{ namespace Database
         return records;
     }
     
-    std::vector<Records::Session> MariaDBConnections::getSessionRecord()
+    std::vector<Session> MariaDBConnections::getSessionRecord()
     {
-        std::vector<Records::Session> empty = {};
+        std::vector<Session> empty = {};
         
         MYSQL* con = mysql_init(NULL);
         if (con == NULL) 
@@ -432,8 +432,8 @@ namespace Santiago{ namespace Database
         
         int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
-        Records::Session record;
-        std::vector<Records::Session> records;
+        Session record;
+        std::vector<Session> records;
         
         std::map<std::string, std::string> months
                                  {{ "01", "Jan",},
@@ -483,9 +483,9 @@ namespace Santiago{ namespace Database
         return records;
     }
     
-    std::vector<Records::Permission> MariaDBConnections::getPermissionRecord()
+    std::vector<Permission> MariaDBConnections::getPermissionRecord()
     {
-        std::vector<Records::Permission> empty = {};
+        std::vector<Permission> empty = {};
         
         MYSQL* con = mysql_init(NULL);
         if (con == NULL) 
@@ -516,12 +516,12 @@ namespace Santiago{ namespace Database
     
         int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
-        Records::Permission record;
-        std::vector<Records::Permission> records;
-        std::map<std::string, Records::UserPermission> permission =
-            {{"READ", Records::UserPermission::READ},
-             {"WRITE", Records::UserPermission::WRITE},
-             {"READ_WRITE", Records::UserPermission::READ_WRITE}};
+        Permission record;
+        std::vector<Permission> records;
+        std::map<std::string, UserPermission> permission =
+            {{"READ", UserPermission::READ},
+             {"WRITE", UserPermission::WRITE},
+             {"READ_WRITE", UserPermission::READ_WRITE}};
         
         while ((row = mysql_fetch_row(result))) 
         { 
