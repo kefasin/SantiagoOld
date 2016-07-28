@@ -10,18 +10,23 @@ namespace Santiago{ namespace Authentication
             case NEW_USER:
                 addNewUser(serverMessage_._connectionMessage._parameters[0],
                            serverMessage_._connectionMessage._parameters[1]);
+		break;	
             case LOGIN_USER:
                 loginUser(serverMessage_._connectionMessage._parameters[0],
                           serverMessage_._connectionMessage._parameters[1]);
+                break;
             case LOGOUT_USER:
                 logoutUser(serverMessage_._connectionMessage._parameters[0]);
+                break;
             case CHANGE_PASS_USER:
                 changePasswordAndLogoutUser(serverMessage_._connectionMessage._parameters[0],
                                             serverMessage_._connectionMessage._parameters[1]);
+                break;
             case CHANGE_PASS_AND_LOGOUT_USER:
                 changePasswordAndLogoutUser(serverMessage_._connectionMessage._parameters[0],
                                             serverMessage_._connectionMessage._parameters[1],
                                             serverMessage_._connectionMessage._parameters[2]);
+                break;
             case VERIFY_USER:
                 verifyUser(serverMessage_._connectionMessage._parameters[0],
                            serverMessage_._connectionMessage._parameters[1]);
