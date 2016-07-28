@@ -2,12 +2,11 @@
 
 using namespace boost::posix_time;
 using namespace boost::gregorian;
-using namespace Santiago::Database;
 
 int main()
 {
     Santiago::Database::MariaDBConnections connection;
-    Records::UserPermission x = UserPermission::READ_WRITE;
+    UserPermission x = UserPermission::READ_WRITE;
     connection.addUserProfileRecord("junais", "pakistan");
     connection.addSessionRecord("junais", "kefas",
     {date{2016, 5, 12}, time_duration{12, 0, 0}});
