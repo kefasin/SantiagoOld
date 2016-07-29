@@ -35,4 +35,11 @@ namespace Santiago{ namespace Authentication
         {
             _idConnectionPtrMap.erase(connectionId_);
         }
-    }}// closing Santiago::Authentication
+        void handleClientMessage(unsigned connectionId_,
+                                 const ConnectionMessage& connectionMessage_)
+        {
+            ServerMessage serverMessage(connectionId_,connectionMessage_);
+        }
+        
+    }
+}// closing Santiago::Authentication

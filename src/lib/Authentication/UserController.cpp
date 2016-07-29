@@ -7,27 +7,28 @@ namespace Santiago{ namespace Authentication
             
             switch(serverMessage_._connectionMessage._type)
             {
-            case NEW_USER:
+            case MessageType::NEW_USER:
                 addNewUser(serverMessage_._connectionMessage._parameters[0],
                            serverMessage_._connectionMessage._parameters[1]);
-		break;	
-            case LOGIN_USER:
+                break;
+            case MessageType::LOGIN_USER:
                 loginUser(serverMessage_._connectionMessage._parameters[0],
                           serverMessage_._connectionMessage._parameters[1]);
                 break;
-            case LOGOUT_USER:
+            case MessageType::LOGOUT_USER:
                 logoutUser(serverMessage_._connectionMessage._parameters[0]);
                 break;
-            case CHANGE_PASS_USER:
-                changePasswordAndLogoutUser(serverMessage_._connectionMessage._parameters[0],
-                                            serverMessage_._connectionMessage._parameters[1]);
+            case MessageType::CHANGE_PASS_USER:
+                changePasswordForUser(serverMessage_._connectionMessage._parameters[0],
+                                            serverMessage_._connectionMessage._parameters[1],
+                                            serverMessage_._connectionMessage._parameters[2]);
                 break;
-            case CHANGE_PASS_AND_LOGOUT_USER:
+            case MessageType::CHANGE_PASS_AND_LOGOUT_USER:
                 changePasswordAndLogoutUser(serverMessage_._connectionMessage._parameters[0],
                                             serverMessage_._connectionMessage._parameters[1],
                                             serverMessage_._connectionMessage._parameters[2]);
                 break;
-            case VERIFY_USER:
+            case MessageType::VERIFY_USER:
                 verifyUser(serverMessage_._connectionMessage._parameters[0],
                            serverMessage_._connectionMessage._parameters[1]);
             }
@@ -99,8 +100,8 @@ namespace Santiago{ namespace Authentication
                 time (&rawTime);
                 timeInfo = localtime (&rawTime);
                 time_t newTime = timegm(timeInfo);
-                ptime logoutTime = from_time_t(newTime);
-                _databaseConnector.addSessionRecord(userId_, cookieId, loginTime);
+                ptime loginTime = from_time_t(newTime);
+                _databaseConnector.addSessionRecord(userId_, cookieString_, loginTime);
             }
             
             else
