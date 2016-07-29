@@ -8,18 +8,15 @@ int main()
     std::string tempStr;
     std::cout << "Enter number of parameters:";
     std::cin >> nop;
-    size = 12 + (nop * 4); 
+    size = 8 + (nop * 4); //size = 12 + (nop * 4) if no.of bytes is there in constructor input string
     std::vector<int> parameterSize;
     std::vector<std::string> parameter;
     for(int i = 0 ; i < nop ; ++i)
     {
         std::cin >> tempStr;
+        size += tempStr.size();
         parameterSize.push_back(tempStr.size());
         parameter.push_back(tempStr);
-    }
-    for(auto it = parameterSize.begin(); it != parameterSize.end(); ++it)
-    {
-        size += *it;
     }
     MessageType type = MessageType::NEW_USER;
     std::map<MessageType, int> enumInt;
