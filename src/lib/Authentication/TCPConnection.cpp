@@ -10,13 +10,18 @@ namespace Santiago{ namespace Authentication
         ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
         ,_onMessageCallbackFn(onMessageCallbackFn_)
     {
-        BOOST_ASSERT(_socketPtr);
+    }
+
+    void TCPConnection::start()
+    {
+                BOOST_ASSERT(_socketPtr);
        
         _socketPtr->async_read_some(_inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
                                     boost::bind(&TCPConnection::handleRead,
                                                 this->shared_from_this(),
                                                 boost::asio::placeholders::error,
                                                 boost::asio::placeholders::bytes_transferred));
+
     }
     
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
@@ -62,5 +67,5 @@ namespace Santiago{ namespace Authentication
         _onDisconnectCallbackFn();
     } 
     
-    }     //closing namespace Santiago::Authentication
+    }      //closing namespace Santiago::Authentication
 }
