@@ -11,17 +11,17 @@ namespace Santiago{ namespace Authentication
         ,_onMessageCallbackFn(onMessageCallbackFn_)
     {
     }
-
+    
     void TCPConnection::start()
     {
-                BOOST_ASSERT(_socketPtr);
-       
+        BOOST_ASSERT(_socketPtr);
+        
         _socketPtr->async_read_some(_inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
                                     boost::bind(&TCPConnection::handleRead,
                                                 this->shared_from_this(),
                                                 boost::asio::placeholders::error,
                                                 boost::asio::placeholders::bytes_transferred));
-
+        
     }
     
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)

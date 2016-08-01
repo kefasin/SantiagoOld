@@ -2,7 +2,7 @@
 
 namespace Santiago{ namespace Authentication
     {
-        void Server::start()
+        void Server::startAccept()
         {
             TCPConnection::MySocketPtr socketPtr(new TCPConnection::MySocket(_acceptor.get_io_service()));
             _acceptor.async_accept(*socketPtr,
@@ -22,13 +22,12 @@ namespace Santiago{ namespace Authentication
                 
                 TCPConnectionPtr newConnection(new TCPConnection(socketPtr_,onDisconnectCallbackFn,
                                                                  onMessageCallbackFn));
+                newConnection->start();
                 _idConnectionPtrMap[_nextConnectionId] = newConnection;
                 ++_nextConnectionId;
-                //_idConnectionPtrMap.insert(std::pair<unsigned,TCPConnectionPtr>
-                //(_nextConnectionId,newConnection));
             } 
             
-            start();
+            startAccept();
         }
         
         void Server::handleDisconnect(unsigned connectionId_)

@@ -21,10 +21,10 @@ namespace Santiago{ namespace Authentication
             :_acceptor(ioService_, tcp::endpoint(tcp::v4(),port_)),_nextConnectionId(1),
              _userController(std::bind(&Server::sendMessageCallbackFn,this,std::placeholders::_1))
         {
-            start();
+            startAccept();
         }
 
-        void start();
+        void startAccept();
 
     protected:
         
