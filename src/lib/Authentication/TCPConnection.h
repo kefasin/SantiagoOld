@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <stdlib.h>
-#include<memory>
+#include <memory>
 
 #include <boost/asio.hpp>
 #include <boost/asio/placeholders.hpp>
@@ -18,7 +18,7 @@
 
 namespace Santiago{ namespace Authentication
 {
-    class TCPConnection: public boost::enable_shared_from_this<TCPConnection>
+    class TCPConnection: public std::enable_shared_from_this<TCPConnection>
     {
     public:
         static const uint BUFFER_INCREMENT_SIZE = 4096;
@@ -34,7 +34,8 @@ namespace Santiago{ namespace Authentication
                       const OnMessageCallbackFn& onMessageCallbackFn_);
 
         boost::system::error_code sendMessage(const ConnectionMessage& message_);
-        void close(); //cleanup including call to onDisconnectCallbackFn.implement in .cppx
+        void close();
+        void startRead();
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);

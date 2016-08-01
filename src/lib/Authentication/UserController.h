@@ -32,9 +32,11 @@ namespace Santiago{ namespace Authentication
         void loginUser(const std::string& userId_, const std::string& password_);
         void logoutUser(const std::string& userId_);
         void changePasswordForUser(const std::string& userId_,
-                                   const std::string oldPassword_,const std::string& newPassword_);
+                                   const std::string oldPassword_,
+                                   const std::string& newPassword_);
         void changePasswordAndLogoutUser(const std::string& userId_,
-                                         const std::string oldPassword_,const std::string& newPassword_);
+                                         const std::string oldPassword_,
+                                         const std::string& newPassword_);
         void verifyUser(const std::string& userId_, const std::string& cookieString_);
 
         SendMessageCallbackFn                   _sendMessageCallbackFn;
