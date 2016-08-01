@@ -1,4 +1,4 @@
-#include "Authentication/Message.h"
+#include "Message.h"
 #include <iostream>
 
 int main()
@@ -45,7 +45,6 @@ int main()
         temp = (*it).size();
         std::cout << temp << "\t" << *it << "\n";
     }
-    std::string msg = message.getMessageString();
-    std::cout << msg; //printing str.str() and msg give same result
+    std::cout << message.getMessageString(); //printing str.str() and message.getMessageString() give same result
     return 0;
 }
