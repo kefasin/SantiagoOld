@@ -37,7 +37,7 @@ namespace Santiago{ namespace Authentication
 
         
         void Server::handleClientMessage(unsigned connectionId_,
-                                 const ConnectionMessage& connectionMessage_)
+                                         const ConnectionMessage& connectionMessage_)
         {
              //for now assume all messages are USER messages.
             // Later when implementing ResourceController check if they are USER or RESOURCE message
