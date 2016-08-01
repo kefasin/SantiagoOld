@@ -22,7 +22,7 @@ namespace Santiago{ namespace Authentication
                 
                 TCPConnectionPtr newConnection(new TCPConnection(socketPtr_,onDisconnectCallbackFn,
                                                                  onMessageCallbackFn));
-                newConnection->start();
+                newConnection->startRead();
                 _idConnectionPtrMap[_nextConnectionId] = newConnection;
                 ++_nextConnectionId;
             } 
@@ -34,10 +34,22 @@ namespace Santiago{ namespace Authentication
         {
             _idConnectionPtrMap.erase(connectionId_);
         }
+
+        
         void handleClientMessage(unsigned connectionId_,
                                  const ConnectionMessage& connectionMessage_)
         {
+             //for now assume all messages are USER messages.
+            // Later when implementing ResourceController check if they are USER or RESOURCE message
             ServerMessage serverMessage(connectionId_,connectionMessage_);
+        }
+
+        
+        boost::system::error_code sendMessageCallbackFn(const ServerMessage& serverMessage_)
+        {
+            //TODO need to check if such a connection still exists
+            _userController.handleClientMessage(serverMessage_);
+            return _idConnectionPtrMap[serverMessage_._connectionId]->sendMessage(serverMessage_._connectionMessage);
         }
         
     }

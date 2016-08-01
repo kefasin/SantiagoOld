@@ -19,7 +19,7 @@ int main()
 {
 
     boost::asio::io_service io_service;
-    _acceptorPtr.reset(new tcp::acceptor(io_service, tcp::endpoint(tcp::v4(),5000)));
+    _acceptorPtr.reset(new tcp::acceptor(io_service, tcp::endpoint(tcp::v4(),4461)));
     start();
     io_service.run();
 }
@@ -41,10 +41,9 @@ void handleAccept(const TCPConnection::MySocketPtr socketPtr_,
 
         TCPConnection::Ptr newConnection(new TCPConnection(socketPtr_,onDisconnectCallbackFn,
                                                          onMessageCallbackFn));
-        newConnection->start();
-        start();
-       
+        newConnection->startRead(); 
     }
+    start();
 }
             
 void handleDisconnect()

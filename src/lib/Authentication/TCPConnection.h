@@ -34,8 +34,8 @@ namespace Santiago{ namespace Authentication
                       const OnMessageCallbackFn& onMessageCallbackFn_);
 
         boost::system::error_code sendMessage(const ConnectionMessage& message_);
-        void close(); //cleanup including call to onDisconnectCallbackFn.implement in .cpp
-        void start();
+        void close();
+        void startRead();
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);

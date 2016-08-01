@@ -33,14 +33,8 @@ namespace Santiago{ namespace Authentication
         void handleDisconnect(unsigned connectionId_);
         void handleClientMessage(unsigned connectionId_,
                                  const ConnectionMessage& connectionMessage_);     
-            //for now assume all messages are USER messages.
-            // Later when implementing ResourceController check if they are USER or RESOURCE message
-        boost::system::error_code sendMessageCallbackFn(const ServerMessage& serverMessage_)
-        {
-            //TODO need to check if such a connection still exists
-             _userController.handleClientMessage(serverMessage_);
-            return _idConnectionPtrMap[serverMessage_._connectionId]->sendMessage(serverMessage_._connectionMessage);
-        }
+        boost::system::error_code sendMessageCallbackFn(const ServerMessage& serverMessage_);
+       
         
         tcp::acceptor                           _acceptor;
         std::map<unsigned,TCPConnectionPtr>          _idConnectionPtrMap;
