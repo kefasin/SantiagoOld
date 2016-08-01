@@ -22,7 +22,7 @@ int main()
         std::string msg="hai";
         boost::system::error_code error;
         boost::asio::write(socket, boost::asio::buffer(msg),
-                           boost::asio::transfer_all(),error1);
+                           boost::asio::transfer_all(),error);
         if(!error)
             std::cout<<"send";
     }
