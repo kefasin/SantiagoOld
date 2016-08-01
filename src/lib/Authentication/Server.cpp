@@ -36,7 +36,7 @@ namespace Santiago{ namespace Authentication
         }
 
         
-        void handleClientMessage(unsigned connectionId_,
+        void Server::handleClientMessage(unsigned connectionId_,
                                  const ConnectionMessage& connectionMessage_)
         {
              //for now assume all messages are USER messages.
@@ -45,7 +45,7 @@ namespace Santiago{ namespace Authentication
         }
 
         
-        boost::system::error_code sendMessageCallbackFn(const ServerMessage& serverMessage_)
+        boost::system::error_code Server::sendMessageCallbackFn(const ServerMessage& serverMessage_)
         {
             //TODO need to check if such a connection still exists
             _userController.handleClientMessage(serverMessage_);
