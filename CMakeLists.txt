@@ -29,8 +29,12 @@ set(Boost_LIBRARIES ${Boost_LIBRARIES} pthread)
 
 #TODO:Add MariaDB find_package(), include_directories() here
 #     May need to add a cmakemodule
-find_package(MariaDB)
+find_package(MariaDB REQUIRED)
+if(MARIADB_FOUND)
 include_directories (${MARIADB_INCLUDE_DIR})
+else()
+message(FATAL_ERROR "maria db not found")
+endif()
 
 include_directories (${CMAKE_SOURCE_DIR}/src/lib)
 
