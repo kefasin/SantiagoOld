@@ -3,8 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <stdlib.h>
-#include <memory>
+#include <cstdlib>
 
 #include <boost/asio.hpp>
 #include <boost/asio/placeholders.hpp>
@@ -12,16 +11,17 @@
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 #include "Message.h"
 
 namespace Santiago{ namespace Authentication
 {
-    class TCPConnection: public std::enable_shared_from_this<TCPConnection>
+    class TCPConnection:public std::enable_shared_from_this<TCPConnection>
     {
     public:
-        static const uint BUFFER_INCREMENT_SIZE = 4096;
+
+        static const unsigned BUFFER_INCREMENT_SIZE = 4096;
+        typedef boost::shared_ptr<boost::asio::strand> StrandPtr;
         typedef std::shared_ptr<TCPConnection> Ptr;
         typedef boost::asio::ip::tcp::socket MySocket;
         typedef std::shared_ptr<MySocket> MySocketPtr;
@@ -33,19 +33,23 @@ namespace Santiago{ namespace Authentication
                       const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                       const OnMessageCallbackFn& onMessageCallbackFn_);
 
-        boost::system::error_code sendMessage(const ConnectionMessage& message_);
+        void sendMessage(const ConnectionMessage& message_);
+        void start();
         void close();
-        void startRead();
+
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);
+        void sendMessageImpl(const ConnectionMessage& message_);
 
         MySocketPtr                             _socketPtr;
+        boost::asio::io_service                &_ioService;
+        StrandPtr                               _strandPtr;
         OnDisconnectCallbackFn                  _onDisconnectCallbackFn;
         OnMessageCallbackFn                     _onMessageCallbackFn;
 
         boost::asio::streambuf                  _inputBuffer;
-};
+    };
 
 
 

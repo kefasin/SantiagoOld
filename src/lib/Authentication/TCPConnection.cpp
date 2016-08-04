@@ -7,19 +7,23 @@ namespace Santiago{ namespace Authentication
                                  const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                                  const OnMessageCallbackFn& onMessageCallbackFn_)
         :_socketPtr(socketPtr_)
+        ,_ioService(_socketPtr->get_io_service())
+        ,_strandPtr(new boost::asio::strand(_ioService))
         ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
         ,_onMessageCallbackFn(onMessageCallbackFn_)
     {
+        BOOST_ASSERT(_socketPtr);
+        start();
     }
     
-    void TCPConnection::startRead()
+    void TCPConnection::start()
     {
-        BOOST_ASSERT(_socketPtr); 
+
         _socketPtr->async_read_some(_inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
-                                    boost::bind(&TCPConnection::handleRead,
-                                                this->shared_from_this(),
-                                                boost::asio::placeholders::error,
-                                                boost::asio::placeholders::bytes_transferred));       
+                                    _strandPtr->wrap(boost::bind(&TCPConnection::handleRead,
+                                                                 this->shared_from_this(),
+                                                                 boost::asio::placeholders::error,
+                                                                 boost::asio::placeholders::bytes_transferred)));
     }
     
     void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
@@ -31,18 +35,17 @@ namespace Santiago{ namespace Authentication
         else
         {
             _inputBuffer.commit(bytesTransferred_);
-            unsigned bufferSize = _inputBuffer.size();
-            while (bufferSize)
+
+            while (_inputBuffer.size())
             {
                 const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
-                unsigned messageStringSize = *(reinterpret_cast<const unsigned*>(inputBufferData));
-                if(bufferSize >= messageStringSize)
+                unsigned messageSize = *(reinterpret_cast<const unsigned*>(inputBufferData));
+                if(_inputBuffer.size() >= messageSize)
                 {
-                    std::string myString( reinterpret_cast<char const*>(inputBufferData+4), messageStringSize-4);
-                    _inputBuffer.consume(messageStringSize);
-                    ConnectionMessage message(myString);
+                    ConnectionMessage message(inputBufferData+4,messageSize-4);
+                    _inputBuffer.consume(messageSize);
+
                     _onMessageCallbackFn(message);
-                    bufferSize -= messageStringSize;  
                 }
                 else
                 {
@@ -50,13 +53,38 @@ namespace Santiago{ namespace Authentication
                 }
             }
         }
-        startRead();        
+        start();
     }
     
     void TCPConnection::close()
     {
+        _socketPtr.reset();
         _onDisconnectCallbackFn();
-    } 
+    }
+
+    void TCPConnection::sendMessage(const ConnectionMessage& message_)
+    {
+        _strandPtr->dispatch(boost::bind(&TCPConnection::sendMessageImpl,this,message_));
+    }
+
+    void TCPConnection::sendMessageImpl(const ConnectionMessage& message_)
+    {
+        boost::asio::streambuf outputBuffer;
+        std::ostream outStream(&outputBuffer);
+        outStream<<message_;
+
+        boost::system::error_code errorCode;
+        BOOST_ASSERT(_socketPtr);
+        unsigned size = boost::asio::write(*_socketPtr,outputBuffer,errorCode);
+        if(!errorCode)
+        {
+            BOOST_ASSERT(message_.getSize() == size);
+        }
+        else
+        {
+            close();
+        }
+    }
     
-    }      //closing namespace Santiago::Authentication
-}
+}}      //closing namespace Santiago::Authentication
+

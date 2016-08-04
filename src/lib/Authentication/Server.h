@@ -17,27 +17,22 @@ namespace Santiago{ namespace Authentication
 
         typedef TCPConnection::Ptr TCPConnectionPtr;
 
-        Server(boost::asio::io_service& ioService_,int port_)
-            :_acceptor(ioService_, tcp::endpoint(tcp::v4(),port_)),_nextConnectionId(1),
-             _userController(std::bind(&Server::sendMessageCallbackFn,this,std::placeholders::_1))
-        {
-            startAccept();
-        }
+        Server(boost::asio::io_service& ioService_,int port_);
 
-        void startAccept();
+        void start();
 
     protected:
         
-        void handleAccept(const TCPConnection::MySocketPtr socketPtr_,
+        void handleAccept(const TCPConnection::MySocketPtr& socketPtr_,
                           const boost::system::error_code& error_);
         void handleDisconnect(unsigned connectionId_);
         void handleClientMessage(unsigned connectionId_,
                                  const ConnectionMessage& connectionMessage_);     
-        boost::system::error_code sendMessageCallbackFn(const ServerMessage& serverMessage_);
+        void sendMessageCallbackFn(const ServerMessage& serverMessage_);
        
         
         tcp::acceptor                           _acceptor;
-        std::map<unsigned,TCPConnectionPtr>          _idConnectionPtrMap;
+        std::map<unsigned,TCPConnectionPtr>     _idConnectionPtrMap;
         unsigned                                _nextConnectionId;
         UserController                          _userController;
         

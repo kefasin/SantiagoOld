@@ -2,51 +2,79 @@
 
 namespace Santiago{ namespace Authentication
 {   
-    ConnectionMessage::ConnectionMessage(const std::string& inputString_)
+    /***********************************************************
+     * ConnectionMessage
+     ***********************************************************/
+
+    ConnectionMessage::ConnectionMessage(const char* content_, unsigned size_)
     {
-        int size = inputString_.size();
-        std::string typeString = inputString_.substr(0, 4);
-        std::map<int, MessageType> type;
-        type = {{65, MessageType::NEW_USER},
-                {66, MessageType::LOGIN_USER},
-                {67, MessageType::LOGOUT_USER},
-                {68, MessageType::CHANGE_PASS_USER},
-                {69, MessageType::CHANGE_PASS_AND_LOGOUT_USER},
-                {70, MessageType::VERIFY_USER}};
-        _type = type.find(*(int*)typeString.c_str())->second;
-        int startPos = 8;
-        while(startPos < size)
+        unsigned curPos = 0;
+        //parse the type
+        _type = *reinterpret_cast<const MessageType*>(content_ + curPos);
+        curPos += sizeof(MessageType);
+        //parse the noOfParameters
+        unsigned noOfParameters = *reinterpret_cast<const unsigned*>(content_ + curPos);        
+        curPos += sizeof(unsigned);
+        //parse the parameters
+        while(curPos < size_)
         {
-            std::string parameterSizeString = inputString_.substr(startPos, 4);
-            int parameterSize = *(int*)parameterSizeString.c_str();
-            startPos += 4;
-            std::string parameter = inputString_.substr(startPos, parameterSize);
-            _parameters.push_back(parameter);
-            startPos += parameterSize;
+            //parse the parameter size
+            unsigned parameterSize = *reinterpret_cast<const unsigned*>(content_ + curPos);
+            curPos += sizeof(unsigned);
+            //check for parameter size inconsistency
+            if(curPos + parameterSize > size_)
+            {
+                throw std::runtime_error("Invalid message format: Parameter size does not match.");
+            }
+
+            _parameters.push_back(std::string(content_ + curPos, parameterSize));
+            curPos += parameterSize;          
         }
-        
+        //check for no of parameters inconsistency.
+        if(_parameters.size() < noOfParameters)
+        {
+            throw std::runtime_error("Invalid message format: Number of paramters does not match.");
+        }
     }
+
+    ConnectionMessage::ConnectionMessage(MessageType type_, const std::vector<std::string>& parameters_)
+        :_type(type_)
+        ,_parameters(parameters_)
+    {}
       
-    std::string ConnectionMessage::getMessageString() const
+    std::ostream& ConnectionMessage::writeToStream(std::ostream& outStream_) const
     {
-        std::stringstream messageString;
-        std::map<MessageType, int> enumType;
-        enumType = {{MessageType::NEW_USER, 65},
-                    {MessageType::LOGIN_USER, 66},
-                    {MessageType::LOGOUT_USER, 67},
-                    {MessageType::CHANGE_PASS_USER, 68},
-                    {MessageType::CHANGE_PASS_AND_LOGOUT_USER, 69},
-                    {MessageType::VERIFY_USER, 70}};
-        int type = enumType.find(_type)->second;
-        messageString.write((const char*)&type, sizeof(type));
-        int parasize = _parameters.size();
-        messageString.write((const char*)&(parasize), sizeof(parasize));
+        outStream_.write(reinterpret_cast<const char*>(&_type), sizeof(_type));
+        unsigned noOfParameters = _parameters.size();
+        outStream_.write(reinterpret_cast<const char*>(&noOfParameters), sizeof(noOfParameters));
+
         for(auto it = _parameters.begin(); it != _parameters.end(); ++it)
         {
-            int size = (*it).size();
-            messageString.write((const char*)&(size), sizeof(size));
-            messageString << *it; 
+            unsigned parameterSize = it->size();
+            outStream_.write(reinterpret_cast<const char*>(&parameterSize), sizeof(parameterSize));
+            outStream_ << *it; 
         }
-        return messageString.str();
+
+        return outStream_;
     }
+
+    unsigned ConnectionMessage::getSize() const
+    {
+        unsigned size = sizeof(MessageType) + sizeof(unsigned);
+        for(unsigned i=0;i<_parameters.size();i++)
+        {
+            size += _parameters[i].size();
+        }
+        return size;
+    }
+
+    /***********************************************************
+     * ServerMessage
+     ***********************************************************/
+
+    ServerMessage::ServerMessage(unsigned connectionId_,const ConnectionMessage& connectionMessage_)
+        :_connectionId(connectionId_)
+        ,_connectionMessage(connectionMessage_)
+    {}
+
 }}//closing Santiago::Authentication 
