@@ -8,7 +8,7 @@ int main()
     std::string tempStr;
     std::cout << "Enter number of parameters:";
     std::cin >> nop;
-    size = 8 + (nop * 4); //size = 12 + (nop * 4) if no.of bytes is there in constructor input string
+    size = 8 + (nop * 4); 
     std::vector<int> parameterSize;
     std::vector<std::string> parameter;
     for(int i = 0 ; i < nop ; ++i)
@@ -18,16 +18,17 @@ int main()
         parameterSize.push_back(tempStr.size());
         parameter.push_back(tempStr);
     }
-    MessageType type = MessageType::NEW_USER;
+    MessageType type = MessageType::CREATE_USER;
     std::map<MessageType, int> enumInt;
-    enumInt = {{MessageType::NEW_USER, 65},
+    enumInt = {{MessageType::SUCCEEDED, 1},
+               {MessageType::FAILED, 0},
+               {MessageType::CREATE_USER, 65},
                {MessageType::LOGIN_USER, 66},
-               {MessageType::LOGOUT_USER, 67},
-               {MessageType::CHANGE_PASS_USER, 68},
-               {MessageType::CHANGE_PASS_AND_LOGOUT_USER, 69},
-               {MessageType::VERIFY_USER, 70}};
+               {MessageType::VERIFY_USER_FOR_COOKIE, 67},
+               {MessageType::LOGOUT_USER_FOR_COOKIE, 68},
+               {MessageType::LOGOUT_USER_FOR_ALL_COOKIES, 69},
+               {MessageType::CHANGE_USER_PASSWORD, 70}};
     tp = enumInt.find(type)->second;
-    //str.write(reinterpret_cast<char*>(&size), sizeof(int)); //if no.of bytes is there in constructor input string
     str.write(reinterpret_cast<char*>(&tp), sizeof(int));
     str.write(reinterpret_cast<char*>(&nop), sizeof(int));
     auto it2 = parameter.begin();
@@ -37,14 +38,18 @@ int main()
         str.write(reinterpret_cast<char*>(&paraSize), sizeof(int));
         str << *it2;
     }
-    //std::cout << "\n" << str.str(); 
-    Santiago::Authentication::ConnectionMessage message(str.str());
+    std::cout << "\n" << str.str(); 
+    Santiago::Authentication::ConnectionMessage message(str.str().c_str(), size);
     std::cout << "\n" << enumInt.find(message._type)->second << "\n";
     for(auto it = message._parameters.begin(); it != message._parameters.end(); ++it)
     {
         temp = (*it).size();
         std::cout << temp << "\t" << *it << "\n";
     }
-    std::cout << message.getMessageString(); //printing str.str() and message.getMessageString() give same result
+
+    std::stringbuf str1;
+    std::ostream os(&str1);
+    message.writeToStream(os);
+    std::cout << "\n" << str1.str(); // printing str.str() and str1.str() gives same result.
     return 0;
 }
