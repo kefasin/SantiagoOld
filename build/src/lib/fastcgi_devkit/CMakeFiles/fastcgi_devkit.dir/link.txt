@@ -1,0 +1,2 @@
+/usr/bin/ar qc libfastcgi_devkit.a  CMakeFiles/fastcgi_devkit.dir/Dummy.cpp.o
+/usr/bin/ranlib libfastcgi_devkit.a

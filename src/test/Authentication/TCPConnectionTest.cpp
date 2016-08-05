@@ -19,7 +19,7 @@ int main()
 {
 
     boost::asio::io_service io_service;
-    _acceptorPtr.reset(new tcp::acceptor(io_service, tcp::endpoint(tcp::v4(),4461)));
+    _acceptorPtr.reset(new tcp::acceptor(io_service, tcp::endpoint(tcp::v4(),4024)));
     start();
     io_service.run();
 }
@@ -29,8 +29,8 @@ void start()
 {
     TCPConnection::MySocketPtr socketPtr(new TCPConnection::MySocket(_acceptorPtr->get_io_service()));
     _acceptorPtr->async_accept(*socketPtr,
-                           boost::bind(&handleAccept, socketPtr,
-                                       boost::asio::placeholders::error));
+                               boost::bind(&handleAccept, socketPtr,
+                                           boost::asio::placeholders::error));
 }
 
 void handleAccept(const TCPConnection::MySocketPtr socketPtr_,
@@ -38,10 +38,12 @@ void handleAccept(const TCPConnection::MySocketPtr socketPtr_,
 {
     if (!error_)
     {
-
-        TCPConnection::Ptr newConnection(new TCPConnection(socketPtr_,onDisconnectCallbackFn,
-                                                         onMessageCallbackFn));
-        newConnection->startRead(); 
+        BOOST_ASSERT(socketPtr_);
+        
+        TCPConnection::Ptr newConnection(new TCPConnection(socketPtr_,
+                                                           onDisconnectCallbackFn,
+                                                           onMessageCallbackFn));
+        newConnection->start(); 
     }
     start();
 }

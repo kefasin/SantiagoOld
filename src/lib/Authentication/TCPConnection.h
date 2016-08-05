@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 
+#include <boost/asio/strand.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/streambuf.hpp>

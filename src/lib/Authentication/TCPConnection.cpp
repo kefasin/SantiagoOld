@@ -13,7 +13,6 @@ namespace Santiago{ namespace Authentication
         ,_onMessageCallbackFn(onMessageCallbackFn_)
     {
         BOOST_ASSERT(_socketPtr);
-        start();
     }
     
     void TCPConnection::start()
@@ -31,11 +30,12 @@ namespace Santiago{ namespace Authentication
         if(error_)
         {
             close();   //check for error and do cleanup.
+            return;
         }
         else
         {
             _inputBuffer.commit(bytesTransferred_);
-
+            
             while (_inputBuffer.size())
             {
                 const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
@@ -44,7 +44,6 @@ namespace Santiago{ namespace Authentication
                 {
                     ConnectionMessage message(inputBufferData+4,messageSize-4);
                     _inputBuffer.consume(messageSize);
-
                     _onMessageCallbackFn(message);
                 }
                 else

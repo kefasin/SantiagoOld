@@ -50,9 +50,9 @@ namespace Santiago{ namespace Authentication
         SendMessageCallbackFn                   _sendMessageCallbackFn;
         std::map<std::string,CookieData>         _cookieCookieDataMap;
         std::map<std::string,UserIdData>        _userIdUserIdDataMap;
-
+        
         Database::MariaDBConnections _databaseConnector;
-
+        
 
     };
 

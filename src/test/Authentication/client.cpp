@@ -16,12 +16,11 @@ int main()
    
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
-    tcp::resolver::query query("localhost","4461");
+    tcp::resolver::query query("localhost","4024");
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
     tcp::socket socket(io_service);
     boost::asio::connect(socket, endpoint_iterator);
     boost::array<char, 100000> buf;
-
 
     std::stringstream _inputBuffer;
     int temp, tp, size, nop;
@@ -31,7 +30,6 @@ int main()
     size = 12 + (nop * 4); 
     std::vector<int> parameterSize;
     std::vector<std::string> parameter;
-    //std::cout << "sd";
     for(int i = 0 ; i < nop ; ++i)
     {
         std::cin >> tempStr;
@@ -43,16 +41,18 @@ int main()
         size += *it;
     }
 
-    MessageType type = MessageType::NEW_USER;
+    MessageType type = MessageType::CREATE_USER;
     std::map<MessageType, int> enumInt;
-    enumInt = {{MessageType::NEW_USER, 65},
+    enumInt = {{MessageType::SUCCEEDED, 1},
+               {MessageType::FAILED, 0},
+               {MessageType::CREATE_USER, 65},
                {MessageType::LOGIN_USER, 66},
-               {MessageType::LOGOUT_USER, 67},
-               {MessageType::CHANGE_PASS_USER, 68},
-               {MessageType::CHANGE_PASS_AND_LOGOUT_USER, 69},
-               {MessageType::VERIFY_USER, 70}};
+               {MessageType::VERIFY_USER_FOR_COOKIE, 67},
+               {MessageType::LOGOUT_USER_FOR_COOKIE, 68},
+               {MessageType::LOGOUT_USER_FOR_ALL_COOKIES, 69},
+               {MessageType::CHANGE_USER_PASSWORD, 70}};
     tp = enumInt.find(type)->second;
-    _inputBuffer.write(reinterpret_cast<char*>(&size), sizeof(int)); 
+    _inputBuffer.write(reinterpret_cast<char*>(&size), sizeof(int));
     _inputBuffer.write(reinterpret_cast<char*>(&tp), sizeof(int));
     _inputBuffer.write(reinterpret_cast<char*>(&nop), sizeof(int));
     auto it2 = parameter.begin();
@@ -62,7 +62,6 @@ int main()
         _inputBuffer.write(reinterpret_cast<char*>(&paraSize), sizeof(int));
         _inputBuffer << *it2;
     }
-
 
     std::string msg = _inputBuffer.str();
     
