@@ -21,19 +21,24 @@ namespace Santiago{ namespace Authentication
             //parse the parameter size
             unsigned parameterSize = *reinterpret_cast<const unsigned*>(content_ + curPos);
             curPos += sizeof(unsigned);
-            //check for parameter size inconsistency
+            //check for size overflow
             if(curPos + parameterSize > size_)
             {
-                throw std::runtime_error("Invalid message format: Parameter size does not match.");
+                throw std::runtime_error("Invalid message format: Parameter size causing size overflow.");
             }
 
             _parameters.push_back(std::string(content_ + curPos, parameterSize));
-            curPos += parameterSize;          
+            curPos += parameterSize;
+            //TODO: check for parameter size inconsistency
+            /*if()
+            {
+                throw std::runtime_error("Invalid message format: Parameter size does not match.");
+                }*/
         }
         //check for no of parameters inconsistency.
-        if(_parameters.size() < noOfParameters)
+        if(_parameters.size() != noOfParameters)
         {
-            throw std::runtime_error("Invalid message format: Number of paramters does not match.");
+            throw std::runtime_error("Invalid message format: Number of parameters does not match.");
         }
     }
 
@@ -63,7 +68,7 @@ namespace Santiago{ namespace Authentication
         unsigned size = sizeof(MessageType) + sizeof(unsigned);
         for(unsigned i=0;i<_parameters.size();i++)
         {
-            size += _parameters[i].size();
+            size += sizeof(unsigned) + _parameters[i].size();
         }
         return size;
     }
