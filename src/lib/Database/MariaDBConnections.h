@@ -17,6 +17,7 @@ namespace Santiago{ namespace Database
         
         MariaDBConnections();
         bool addUserProfileRecord(const std::string, const std::string);
+        bool checkUserProfileRecord(const std::string, const std::string);
         bool updateUserPassword(const std::string, const std::string, const std::string);
         bool addSessionRecord(const std::string, const std::string, ptime);
         bool updateSessionRecord(const std::string, ptime);

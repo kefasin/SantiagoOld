@@ -6,11 +6,41 @@ using namespace boost::gregorian;
 int main()
 {
     Santiago::Database::MariaDBConnections connection;
-    UserPermission x = UserPermission::READ_WRITE;
-    connection.addUserProfileRecord("junais", "pakistan");
-    connection.addSessionRecord("junais", "kefas",
-    {date{2016, 5, 12}, time_duration{12, 0, 0}});
-    connection.updateSessionRecord("junais", {date{2014, 6, 12}, time_duration{13, 0, 3}});
+    Santiago::Database::UserPermission x = Santiago::Database::UserPermission::READ_WRITE;
+    if(connection.addUserProfileRecord("junais", "pakistan"))
+    {
+        std::cout << "\nAdded.\n";   
+    }
+    else
+    {
+        std::cout << "\nUsername already used.\n";
+    }
+    if(connection.addUserProfileRecord("junais", "india"))
+    {
+        std::cout << "\nAdded.\n";   
+    }
+    else
+    {
+        std::cout << "\nUsername already used.\n";
+    }
+    if(connection.checkUserProfileRecord("junais", "pakistan"))
+    {
+        std::cout << "\nMatch Found.\n";   
+    }
+    else
+    {
+        std::cout << "\nNo match.\n";
+    }
+    if(connection.checkUserProfileRecord("junais", "india"))
+    {
+        std::cout << "\nMatch Found.\n";   
+    }
+    else
+    {
+        std::cout << "\nNo match.\n";
+    }
+    connection.addSessionRecord("junais", "kefas", {date{2016, 5, 12}, time_duration{12, 0, 0}});
+    connection.updateSessionRecord("junais", {date{2016, 6, 12}, time_duration{13, 0, 3}});
     connection.addPermissionRecord(34, "junais", x);
     connection.updateUserPassword("junais", "pakistan","india");
     std::vector<UserProfile> records1 = connection.getUserProfileRecord();
@@ -33,4 +63,3 @@ int main()
     }
     return 0;
 }
-    

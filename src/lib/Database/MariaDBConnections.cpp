@@ -109,6 +109,7 @@ namespace Santiago{ namespace Database
     bool MariaDBConnections::addUserProfileRecord(const std::string userName_, const std::string password_)
     {
         MYSQL* con = mysql_init(NULL);
+        
         if (con == NULL) 
         {
             return 0;
@@ -120,7 +121,49 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return 0;
         }
-   
+
+        if(_userProfileId)
+        {
+            std::string checkUserId = "SELECT COALESCE(MAX(ID), 0) FROM USER_PROFILE WHERE USERNAME = '" + userName_ + "'";
+            
+            if (mysql_query(con, checkUserId.c_str()))
+            {
+                mysql_close(con);
+                return 0;
+            }
+
+            MYSQL_RES *result = mysql_store_result(con);
+            
+            if (result == NULL) 
+            {
+                mysql_close(con);
+                return 0;
+            }
+        
+            MYSQL_ROW row;
+            row = mysql_fetch_row(result);
+            
+            if(atoi(row[0]))
+            {
+                mysql_close(con);
+                return 0;
+            }
+        }
+
+        MYSQL* conAdd = mysql_init(NULL);
+        
+        if (conAdd == NULL) 
+        {
+            return 0;
+        }
+        
+        if (mysql_real_connect(conAdd, "localhost", "root", "kefas123", 
+                               "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
+        {
+            mysql_close(conAdd);
+            return 0;
+        }
+        
         ++_userProfileId;
         std::stringstream userProfileId;
         userProfileId << _userProfileId;
@@ -128,11 +171,65 @@ namespace Santiago{ namespace Database
         std::string insertQuery = "INSERT INTO USER_PROFILE VALUES('" +
             userProfileId.str() + "', '" + userName_ + "', '" + password_ + "')";
         
-        if (mysql_query(con, insertQuery.c_str()))
+        if (mysql_query(conAdd, insertQuery.c_str()))
+        {
+            mysql_close(conAdd);
+            return 0;
+        }
+        
+        mysql_close(conAdd);
+        mysql_close(con);
+        return 1;
+    }
+
+    bool MariaDBConnections::checkUserProfileRecord(const std::string userId_, const std::string password_)
+    {
+        MYSQL* con = mysql_init(NULL);
+        if (con == NULL) 
+        {
+            return 0;
+        }
+        
+        if (mysql_real_connect(con, "localhost", "root", "kefas123", 
+                               "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
         {
             mysql_close(con);
             return 0;
         }
+        
+        std::string checkPassword = "SELECT PASSWORD FROM USER_PROFILE WHERE USERNAME='" + userId_ + "'";
+        
+        if(mysql_query(con, checkPassword.c_str()))
+        {
+            mysql_close(con);
+            return 0;
+        }
+        
+        MYSQL_RES *result = mysql_store_result(con);
+        
+        if (result == NULL) 
+        {
+            mysql_close(con);
+            return 0;
+        }
+        
+        MYSQL_ROW row;
+        row = mysql_fetch_row(result);
+        
+        if(row)
+        {
+            if(password_ != row[0])
+            {
+                mysql_close(con);
+                return 0;
+            }
+        }
+        
+        else
+        {
+            return 0;
+        }
+        
         mysql_close(con);
         return 1;
     }
@@ -169,7 +266,6 @@ namespace Santiago{ namespace Database
             return 0;
         }
         
-        int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
         row = mysql_fetch_row(result);
        
