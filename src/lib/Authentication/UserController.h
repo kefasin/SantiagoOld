@@ -5,6 +5,7 @@
 #include <functional>
 #include <mutex>
 #include <vector>
+#include <cstdlib>
 
 #include "Database/MariaDBConnections.h"
 #include "Message.h"
@@ -48,7 +49,7 @@ namespace Santiago{ namespace Authentication
                                 const std::string& newPassword_);
 
         SendMessageCallbackFn                   _sendMessageCallbackFn;
-        std::map<std::string,CookieData>         _cookieCookieDataMap;
+        std::map<std::string,CookieData>        _cookieCookieDataMap;
         std::map<std::string,UserIdData>        _userIdUserIdDataMap;
         
         Database::MariaDBConnections _databaseConnector;

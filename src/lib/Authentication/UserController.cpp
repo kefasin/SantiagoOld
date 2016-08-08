@@ -44,11 +44,18 @@ namespace Santiago{ namespace Authentication
     
     void UserController:: createUser(const std::string& userId_, const std::string& password_)
     {
-        //TODO: the addUserProfileRecord should check for already existing users of the same id.
-        //TODO: addUserProfileRecord should return true if succees. Else return failed
-        //TODO: inform the result to the client using the _sendMessageCallbackFn
-        _databaseConnector.addUserProfileRecord(userId_, password_);
+        bool available = _databaseConnector.addUserProfileRecord(userId_, password_);
+        
+        if(available)
+        {
+            _sendMessageCallbackFn(usedId_); 
         }
+
+        else
+        {
+            _sendMessageCallbackFn(); 
+        }
+    }
     
     void UserController::loginUser(unsigned connectionId_,
                                    const std::string& userId_,
@@ -56,33 +63,40 @@ namespace Santiago{ namespace Authentication
     {
         //TODO: find a way to generate unique cookie. Use connectionId_ to differentiate simultaneous
         //calls if we are using time based generation
-        //TODO: check if the user name password matches
-        //TODO: use _sendMessageCallbackFn to return the result. FAILED has no parameter
-        // SUCCESS has cookie as the parameter
         
-        std::string cookieId;
-        //TODO Initialize cookieId
-        time_t rawTime;
-        struct tm * timeInfo;
-        time (&rawTime);
-        timeInfo = localtime (&rawTime);
-        time_t newTime = timegm(timeInfo);
-        ptime loginTime = from_time_t(newTime);
-        _databaseConnector.addSessionRecord(userId_, cookieId, loginTime);
-
-        //TODO: Modify the _cookiedCookieDataMap and _userIdUserIdDataMap like below
-/*
-        std::lock_guard<std::mutex>  lock(mtx);
-        _cookieCookieDataMap[cookie] = CookieData{userId_,connectionId_};
-        _userIdUserDataMap[userId_]._cookieList.push_back(cookie);
-*/
+        bool match = _databaseConnector.checkUserProfileRecord(userId_, password_);
+        
+        if(match)
+        {
+            std::string cookie;
+            long cookieNum = rand() % 1000000000000000;
+            std::stringstream temp;
+            temp << cookieNum;
+            cookie = temp.str();          // Random generated cookie. May not be unique.
+            time_t rawTime;
+            struct tm * timeInfo;
+            time (&rawTime);
+            timeInfo = localtime (&rawTime);
+            time_t newTime = timegm(timeInfo);
+            ptime loginTime = from_time_t(newTime);
+            _databaseConnector.addSessionRecord(userId_, cookie, loginTime);
+            std::lock_guard<std::mutex>  lock(mtx);
+            _cookieCookieDataMap[cookie] = CookieData{userId_,connectionId_};
+            _userIdUserDataMap[userId_]._cookieList.push_back(cookie);
+            _sendMessageCallbackFn(cookie);
         }
+
+        else
+        {
+            _sendMessageCallbackFn(); 
+        } 
+    }
 
     void UserController::verifyUserForCookie(const std::string& cookie_)
     {    
-        bool match = (_cookieCookieDataMap.find(cookie_) != _cookieCookieDataMap.end());
-        //TODO: return the SUCCEEDED with userid 
         //TODO: if the verify call from another connection add that connection to the _userIdUserIdDataMap
+
+        bool match = (_cookieCookieDataMap.find(cookie_) != _cookieCookieDataMap.end());
         
         if(match)
         {
@@ -93,11 +107,12 @@ namespace Santiago{ namespace Authentication
             time_t newTime = timegm(timeInfo);
             ptime loginTime = from_time_t(newTime);
             _databaseConnector.addSessionRecord(_cookieCookieDataMap[cookie_]._userId, cookie_, loginTime);
+            _sendMessageCallbackFn(_cookieCookieDataMap[cookie_]._userId);
         }
         
         else
         {
-            //No matching userId_ and cookieString_
+            _sendMessageCallbackFn();  
         }
     }
 
@@ -122,9 +137,16 @@ namespace Santiago{ namespace Authentication
                                             const std::string& oldPassword_,
                                             const std::string& newPassword_)
     {
-        _databaseConnector.updateUserPassword(userId_, oldPassword_, newPassword_);
-        //update only if oldPassword_ is matching
-        //TODO: send SUCEEDED or FAILED message
+        bool update = _databaseConnector.updateUserPassword(userId_, oldPassword_, newPassword_);
+        if(update)
+        {
+            _sendMessageCallbackFn(usedId_);
+        }
+
+        else
+        {
+            _sendMessageCallbackFn();
+        }
     }
 
 
