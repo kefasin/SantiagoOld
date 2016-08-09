@@ -3,10 +3,12 @@
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 
+using namespace Santiago::Database;
+
 int main()
 {
-    Santiago::Database::MariaDBConnections connection;
-    Santiago::Database::UserPermission x = Santiago::Database::UserPermission::READ_WRITE;
+    MariaDBConnections connection;
+    UserPermission x = UserPermission::READ_WRITE;
     if(connection.addUserProfileRecord("junais", "pakistan"))
     {
         std::cout << "\nAdded.\n";   
@@ -42,7 +44,30 @@ int main()
     connection.addSessionRecord("junais", "kefas", {date{2016, 5, 12}, time_duration{12, 0, 0}});
     connection.updateSessionRecord("junais", {date{2016, 6, 12}, time_duration{13, 0, 3}});
     connection.addPermissionRecord(34, "junais", x);
-    connection.updateUserPassword("junais", "pakistan","india");
+    if(connection.updateUserPassword("junais", "pakistan","india"))
+    {
+        std::cout<< "\nPassword updated.\n";
+    }
+    else
+    {
+        std::cout << "\nInvalid User Id or Password.\n";
+    }
+    if(connection.updateUserPassword("juais", "pakistan","india"))
+    {
+        std::cout<< "\nPassword updated.\n";
+    }
+    else
+    {
+        std::cout << "\nInvalid User Id or Password.\n";
+    }
+    if(connection.updateUserPassword("junais", "pakistan","india"))
+    {
+        std::cout<< "\nPassword updated.\n";
+    }
+    else
+    {
+        std::cout << "\nInvalid User Id or Password.\n";
+    }
     std::vector<UserProfile> records1 = connection.getUserProfileRecord();
     for(auto it = records1.begin(); it != records1.end(); ++it)
     {
@@ -63,3 +88,4 @@ int main()
     }
     return 0;
 }
+    

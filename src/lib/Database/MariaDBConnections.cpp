@@ -268,42 +268,50 @@ namespace Santiago{ namespace Database
         
         MYSQL_ROW row;
         row = mysql_fetch_row(result);
-       
-        if(oldPassword_ != row[0])
+
+        if(row)
+        {
+            if(oldPassword_ != row[0])
+            {
+                mysql_close(con);
+                return 0;
+            }
+            
+            else
+            {
+                MYSQL* conUpdate = mysql_init(NULL);
+                if (conUpdate == NULL) 
+                {
+                    return 0;
+                }
+                
+                if (mysql_real_connect(conUpdate, "localhost", "root", "kefas123", 
+                                       "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
+                {
+                    mysql_close(conUpdate);
+                    mysql_close(con);
+                    return 0;
+                }
+                
+                std::string updateQuery = "UPDATE USER_PROFILE SET PASSWORD='" +
+                    newPassword_ + "' WHERE USERNAME='" + userId_ +"'";
+                
+                if(mysql_query(conUpdate, updateQuery.c_str()))
+                {              
+                    mysql_close(conUpdate);
+                    mysql_close(con);
+                    return 0;
+                }
+                mysql_close(conUpdate);
+            }
+            mysql_close(con);
+            return 1;
+        }
+        else
         {
             mysql_close(con);
             return 0;
         }
-
-        else
-        {
-            MYSQL* conUpdate = mysql_init(NULL);
-            if (conUpdate == NULL) 
-            {
-                return 0;
-            }
-            
-            if (mysql_real_connect(conUpdate, "localhost", "root", "kefas123", 
-                                   "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
-            {
-                mysql_close(conUpdate);
-                mysql_close(con);
-                return 0;
-            }
-            
-            std::string updateQuery = "UPDATE USER_PROFILE SET PASSWORD='" +
-                newPassword_ + "' WHERE USERNAME='" + userId_ +"'";
-            
-            if(mysql_query(conUpdate, updateQuery.c_str()))
-            {              
-                mysql_close(conUpdate);
-                mysql_close(con);
-                return 0;
-            }
-            mysql_close(conUpdate);
-        }
-        mysql_close(con);
-        return 1;
     }
         
     bool MariaDBConnections::addSessionRecord(const std::string userName_,
