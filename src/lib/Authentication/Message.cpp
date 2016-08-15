@@ -1,7 +1,15 @@
 #include "Message.h"
 
 namespace Santiago{ namespace Authentication
-{   
+{
+    /***********************************************************
+     * RequestId
+     ***********************************************************/
+    RequestId::RequestId(uchar initiatingConnectionId_,unsigned requestNo_)
+        :_initiatingConnectionId(initiatingConnectionId_)
+        ,_requestNo(requestNo_)
+    {}
+   
     /***********************************************************
      * ConnectionMessage
      ***********************************************************/
@@ -10,8 +18,8 @@ namespace Santiago{ namespace Authentication
     {
         unsigned curPos = 0;
         //parse the type
-        _type = *reinterpret_cast<const MessageType*>(content_ + curPos);
-        curPos += sizeof(MessageType);
+        _type = *reinterpret_cast<const ConnectionMessageType*>(content_ + curPos);
+        curPos += sizeof(ConnectionMessageType);
         //parse the noOfParameters
         unsigned noOfParameters = *reinterpret_cast<const unsigned*>(content_ + curPos);        
         curPos += sizeof(unsigned);
@@ -42,7 +50,7 @@ namespace Santiago{ namespace Authentication
         }
     }
 
-    ConnectionMessage::ConnectionMessage(MessageType type_, const std::vector<std::string>& parameters_)
+    ConnectionMessage::ConnectionMessage(ConnectionMessageType type_, const std::vector<std::string>& parameters_)
         :_type(type_)
         ,_parameters(parameters_)
     {}
@@ -65,7 +73,7 @@ namespace Santiago{ namespace Authentication
 
     unsigned ConnectionMessage::getSize() const
     {
-        unsigned size = sizeof(MessageType) + sizeof(unsigned);
+        unsigned size = sizeof(ConnectionMessageType) + sizeof(unsigned);
         for(unsigned i=0;i<_parameters.size();i++)
         {
             size += sizeof(unsigned) + _parameters[i].size();
@@ -77,8 +85,13 @@ namespace Santiago{ namespace Authentication
      * ServerMessage
      ***********************************************************/
 
-    ServerMessage::ServerMessage(unsigned connectionId_,const ConnectionMessage& connectionMessage_)
+    ServerMessage::ServerMessage(unsigned connectionId_,
+                                 const RequestId& requestId_,
+                                 ServerMessageType type_,
+                                 const ConnectionMessage& connectionMessage_)
         :_connectionId(connectionId_)
+        ,_requestId(requestId_)
+        ,_type(type_)
         ,_connectionMessage(connectionMessage_)
     {}
 

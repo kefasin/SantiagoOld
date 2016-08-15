@@ -13,20 +13,41 @@ namespace Santiago{ namespace Authentication
      * MessageType
      ***********************************************************/
 
-    enum class MessageType
+    enum class ConnectionMessageType
     {
-       /* First 4 bits used to signify the type of message.
-          First bit signifies USER authentication message.
-          Second bit signifies RESOURCE authentication message*/
+        /* 2 types of messages: Requests and Replies
+         * Requests - CR - Client Request, SR - Server Request
+         * Replies - Succeeded, Failed
+         */
+        SUCCEEDED,
+        FAILED,
 
-        SUCCEEDED                       = 1,
-        FAILED                          = 0,
-        CREATE_USER                     = 65, //0b1000001 
-        LOGIN_USER                      = 66, //0b1000010
-        VERIFY_USER_FOR_COOKIE          = 67, //0b1000011
-        LOGOUT_USER_FOR_COOKIE          = 68, //0b1000100
-        LOGOUT_USER_FOR_ALL_COOKIES     = 69, //0b1000101
-        CHANGE_USER_PASSWORD            = 70, //0b1000110
+        CR_CREATE_USER, 
+        CR_LOGIN_USER,
+        CR_VERIFY_USER_FOR_COOKIE,
+        CR_LOGOUT_USER_FOR_COOKIE,
+        CR_LOGOUT_USER_FOR_ALL_COOKIES,
+        CR_CHANGE_USER_PASSWORD,
+
+        SR_LOGOUT_USER_FOR_COOKIE,
+        SR_LOGOUT_USER_FOR_ALL_COOKIES,
+    };
+
+    /***********************************************************
+     * RequestId
+     ***********************************************************/
+    struct RequestId 
+    {
+        /*
+         * TODO: Implement the < operator. first check initiatingConnectionId 
+         * and if equal then check requestNo.
+         */
+        RequestId(unsigned _initiatingConnectionId,unsigned _requestNo);
+
+        bool operator<(const RequestId& rhs_);
+
+        unsigned  _initiatingConnectionId;
+        unsigned  _requestNo;
     };
 
     /***********************************************************
@@ -37,12 +58,12 @@ namespace Santiago{ namespace Authentication
     {
         ConnectionMessage(const char* content_,unsigned size_);         
 
-        ConnectionMessage(MessageType type_,const std::vector<std::string>& parameters_);
+        ConnectionMessage(ConnectionMessageType type_,const std::vector<std::string>& parameters_);
 
         std::ostream& writeToStream(std::ostream& outStream_) const;
         unsigned getSize() const;
-        
-        MessageType               _type;
+
+        ConnectionMessageType     _type;
         std::vector<std::string>  _parameters;
     };
 
@@ -52,13 +73,26 @@ namespace Santiago{ namespace Authentication
     /***********************************************************
      * ServerMessage
      ***********************************************************/
+    enum class ServerMessageType
+    {
+        CONNECTION_MESSAGE_NEW, //new request 
+        CONNECTION_MESSAGE_REPLY, //reply to a SR
+        CONNECTION_DISCONNECT,
+//        DB_MESSAGE    -for when we implement Redis
+    };
 
     struct ServerMessage
     {
-        ServerMessage(unsigned connectionId_,const ConnectionMessage& connectionMessage_);
+        ServerMessage(unsigned connectionId_,
+                      const RequestId& requestId_,
+                      ServerMessageType type_,
+                      const Optional<ConnectionMessage>& connectionMessage_);
 
-        unsigned             _connectionId;
-        ConnectionMessage    _connectionMessage;
+        unsigned                       _connectionId;
+        RequestId                      _requestId;
+        ServerMessageType              _type;
+        Optional<ConnectionMessage>    _connectionMessage;
+//        std::string                    _dbMessage;
     };
 
 }} //closing namespace Santiago::Authentication

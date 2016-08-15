@@ -5,7 +5,7 @@
 #include <string>
 #include <cstdlib>
 
-#include <boost/asio/strand.hpp>
+//#include <boost/asio/strand.hpp> //strand disabled for now
 #include <boost/asio.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/streambuf.hpp>
@@ -22,30 +22,30 @@ namespace Santiago{ namespace Authentication
     public:
 
         static const unsigned BUFFER_INCREMENT_SIZE = 4096;
-        typedef boost::shared_ptr<boost::asio::strand> StrandPtr;
+//        typedef boost::shared_ptr<boost::asio::strand> StrandPtr;
         typedef std::shared_ptr<TCPConnection> Ptr;
         typedef boost::asio::ip::tcp::socket MySocket;
         typedef std::shared_ptr<MySocket> MySocketPtr;
 
         typedef std::function<void()> OnDisconnectCallbackFn;
-        typedef std::function<void(const ConnectionMessage&)> OnMessageCallbackFn;
+        typedef std::function<void(const RequestId&,const ConnectionMessage&)> OnMessageCallbackFn;
 
         TCPConnection(const MySocketPtr& socketPtr_,
                       const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                       const OnMessageCallbackFn& onMessageCallbackFn_);
 
-        void sendMessage(const ConnectionMessage& message_);
+        void sendMessage(const RequestId& requestId_,const ConnectionMessage& message_);
         void start();
         void close();
 
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);
-        void sendMessageImpl(const ConnectionMessage& message_);
+        void sendMessageImpl(const RequestId& requestId_,const ConnectionMessage& message_);
 
         MySocketPtr                             _socketPtr;
         boost::asio::io_service                &_ioService;
-        StrandPtr                               _strandPtr;
+//        StrandPtr                               _strandPtr;
         OnDisconnectCallbackFn                  _onDisconnectCallbackFn;
         OnMessageCallbackFn                     _onMessageCallbackFn;
 
