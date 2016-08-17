@@ -41,6 +41,7 @@ namespace Santiago{ namespace Authentication
     private:
 
         void handleRead(const boost::system::error_code& error_,size_t bytesTransferred_);
+        void parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_);
         void sendMessageImpl(const RequestId& requestId_,const ConnectionMessage& message_);
 
         MySocketPtr                             _socketPtr;

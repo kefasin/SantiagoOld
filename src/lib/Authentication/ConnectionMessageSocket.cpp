@@ -20,10 +20,44 @@ namespace Santiago{ namespace Authentication
 
         _socketPtr->async_read_some(_inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
                                     /*_strandPtr->wrap(*/boost::bind(&ConnectionMessageSocket::handleRead,
-                                                                 this->shared_from_this(),
-                                                                 boost::asio::placeholders::error,
-                                                                 boost::asio::placeholders::bytes_transferred)/*)*/);
+                                                                     this->shared_from_this(),
+                                                                     boost::asio::placeholders::error,
+                                                                     boost::asio::placeholders::bytes_transferred)/*)*/);
     }
+
+    void ConnectionMessageSocket::parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_)
+    {
+        _inputBuffer.commit(bytesTransferred_);
+            
+        while (_inputBuffer.size())
+        {
+            unsigned messageSize = *(reinterpret_cast<const unsigned*>
+                                     (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+            _inputBuffer.consume(sizeof(unsigned));
+            RequestId requestId;
+            requestId._initiatingConnectionId = *(reinterpret_cast<const unsigned*>
+                                                  (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+            _inputBuffer.consume(sizeof(unsigned));
+            requestId._requestNo = *(reinterpret_cast<const unsigned*>
+                                     (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+            
+            
+            const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
+            
+            if(_inputBuffer.size() >= messageSize-12)
+            {
+                ConnectionMessage message(inputBufferData,messageSize-12);
+                _inputBuffer.consume(messageSize-12);
+                _onMessageCallbackFn(requestId,message);
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+    }
+    
     
     void ConnectionMessageSocket::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
@@ -36,28 +70,13 @@ namespace Santiago{ namespace Authentication
 
         if(error_)
         {
+            parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_);
             close();   //check for error and do cleanup.
             return;
         }
         else
         {
-            _inputBuffer.commit(bytesTransferred_);
-            
-            while (_inputBuffer.size())
-            {
-                const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
-                unsigned messageSize = *(reinterpret_cast<const unsigned*>(inputBufferData));
-                if(_inputBuffer.size() >= messageSize)
-                {
-                    ConnectionMessage message(inputBufferData+4,messageSize-4);
-                    _inputBuffer.consume(messageSize);
-                    _onMessageCallbackFn(message);
-                }
-                else
-                {
-                    break;
-                }
-            }
+            parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_);
         }
         start();
     }
