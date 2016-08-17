@@ -1,7 +1,7 @@
 #ifndef SANTIAGO_AUTHENTICATION_CONNECTIONSERVER_H
 #define SANTIAGO_AUTHENTICATION_CONNECTIONSERVER_H
 
-//#include <boost/asio/acceptor.hpp>
+
 #include <boost/asio/socket_acceptor_service.hpp>
 #include <boost/asio/error.hpp>
 
@@ -14,11 +14,11 @@ namespace Santiago{ namespace Authentication
     {
     public:
 
-        typedef TCPConnection::Ptr TCPConnectionPtr;
+        typedef ConnectionMessageSocket::Ptr ConnectionMessageSocketPtr;
         typedef std::function<void(const ServerMessage&)> OnNewRequestCallbackFn;
         typedef std::function<void(const ServerMessage&)> OnRequestReplyCallbackFn;
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
-
+        
         ConnectionServer(boost::asio::io_service& ioService_,
                          int port_,
                          const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
@@ -26,10 +26,10 @@ namespace Santiago{ namespace Authentication
                          const OnRequestReplyCallbackFn& onRequestReplyCallbackFn_);
 
         void start();
-
+        
     protected:
         
-        void handleAccept(const TCPConnection::MySocketPtr& socketPtr_,
+        void handleAccept(const ConnectionMessageSocket::MySocketPtr& socketPtr_,
                           const boost::system::error_code& error_);
 
         void handleDisconnect(unsigned connectionId_);
@@ -39,7 +39,11 @@ namespace Santiago{ namespace Authentication
         
         tcp::acceptor                           _acceptor;
         std::map<unsigned,ConnectionController> _idConnectionPtrMap;
-        unsigned                                _nextConnectionId;        
+        unsigned                                _nextConnectionId;
+
+        onDisconnectCallbackFn                  _onDisconnectCallbackFn;
+        onNewRequestCallbackFn                  _onNewRequestCallbackFn;
+        onRequestReplyCallbackFn                _onRequestReplyCallbackFn;
     };
 }}
 #endif

@@ -2,7 +2,7 @@
 
 namespace Santiago{ namespace Authentication
 {
-    void ConnectionRequestsController::handleTCPConnectionDisconnect()
+    void ConnectionRequestsController::handleConnectionMessageSocketDisconnect()
     {
         while(_replyPendingRequestList.begin() != _replyPendingRequestList.end())
         {
@@ -16,7 +16,7 @@ namespace Santiago{ namespace Authentication
     }
 
     void ConnectionRequestsController::
-    handleTCPConnectionMessage(const RequestId& requestId_, const ConnectionMessage& message_)
+    handleConnectionMessageSocketMessage(const RequestId& requestId_, const ConnectionMessage& message_)
     {
         if((ConnectionMessageType::SUCCEEDED == message_._type) ||
            (ConnectionMessageType::FAILED == message_._type))
@@ -69,7 +69,7 @@ namespace Santiago{ namespace Authentication
         }
         else
         {
-            _tcpConnection.sendMessage(message_._requestId,*message_._connectionMessage);
+            _connectionmessagesocket.sendMessage(message_._requestId,*message_._connectionMessage);
         }
     }
 

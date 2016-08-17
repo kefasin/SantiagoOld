@@ -8,8 +8,8 @@
 #include <cstdlib>
 
 #include "Database/MariaDBConnections.h"
-#include "Message.h"
-#include "TCPConnection.h"
+#include "ServerMessage.h"
+#include "ConnectionMessageSocket.h"
 
 
 namespace Santiago{ namespace Authentication
@@ -52,7 +52,7 @@ namespace Santiago{ namespace Authentication
         std::map<std::string,CookieData>        _cookieCookieDataMap;
         std::map<std::string,UserIdData>        _userIdUserIdDataMap;
         
-        Database::MariaDBConnections _databaseConnector;
+        Database::MariaDBConnections            _databaseConnector;
         
 
     };

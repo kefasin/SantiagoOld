@@ -1,11 +1,11 @@
-#include"TCPConnection.h"
+#include"ConnectionMessageSocket.h"
 
 namespace Santiago{ namespace Authentication
 {
 
-    TCPConnection::TCPConnection(const MySocketPtr& socketPtr_,
-                                 const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
-                                 const OnMessageCallbackFn& onMessageCallbackFn_)
+    ConnectionMessageSocket::ConnectionMessageSocket(const MySocketPtr& socketPtr_,
+                                                     const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
+                                                     const OnMessageCallbackFn& onMessageCallbackFn_)
         :_socketPtr(socketPtr_)
         ,_ioService(_socketPtr->get_io_service())
 //        ,_strandPtr(new boost::asio::strand(_ioService))
@@ -15,17 +15,17 @@ namespace Santiago{ namespace Authentication
         BOOST_ASSERT(_socketPtr);
     }
     
-    void TCPConnection::start()
+    void ConnectionMessageSocket::start()
     {
 
         _socketPtr->async_read_some(_inputBuffer.prepare(BUFFER_INCREMENT_SIZE),
-                                    /*_strandPtr->wrap(*/boost::bind(&TCPConnection::handleRead,
+                                    /*_strandPtr->wrap(*/boost::bind(&ConnectionMessageSocket::handleRead,
                                                                  this->shared_from_this(),
                                                                  boost::asio::placeholders::error,
                                                                  boost::asio::placeholders::bytes_transferred)/*)*/);
     }
     
-    void TCPConnection::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
+    void ConnectionMessageSocket::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
         /*
          * TODO: Pls change to include the RequestId
@@ -62,19 +62,19 @@ namespace Santiago{ namespace Authentication
         start();
     }
     
-    void TCPConnection::close()
+    void ConnectionMessageSocket::close()
     {
         _socketPtr.reset();
         _onDisconnectCallbackFn();
     }
 
-    void TCPConnection::sendMessage(const RequestId& requestId_,const ConnectionMessage& message_)
+    void ConnectionMessageSocket::sendMessage(const RequestId& requestId_,const ConnectionMessage& message_)
     {
 //        _strandPtr->dispatch(boost::bind(&TCPConnection::sendMessageImpl,this,message_));
         sendMessageImpl(requestId_,message_);
     }
 
-    void TCPConnection::sendMessageImpl(const RequestId& requestId_, const ConnectionMessage& message_)
+    void ConnectionMessageSocket::sendMessageImpl(const RequestId& requestId_, const ConnectionMessage& message_)
     {
         /*
          * TODO: Make code to write the size and the requestId to the buffer before

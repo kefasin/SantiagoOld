@@ -7,7 +7,7 @@
 #include <boost/function.hpp>
 
 #include "Message.h"
-#include "TCPConnection.h"
+#include "ConnectionMessageSocket.h"
 
 namespace Santiago{ namespace Authentication
 {
@@ -30,11 +30,11 @@ namespace Santiago{ namespace Authentication
 
     protected:
 
-        void handleTCPConnectionDisconnect();
-        void handleTCPConnectionMessage(const RequestId& requestId_, const ConnectionMessage& message_);
+        void handleConnectionMessageSocketDisconnect();
+        void handleConnectionMessageSocketMessage(const RequestId& requestId_, const ConnectionMessage& message_);
 
         unsigned                      _connectionId;
-        TCPConnection                 _tcpConnection;
+        ConnectionMessageSocket       _connectionmessagesocket;
         OnDisconnectCallbackFn        _onDisconnectCallbackFn;
         OnNewRequestCallbackFn        _onNewRequestCallbackFn;
         OnRequestReplyCallbackFn      _onRequestReplyCallbackFn;
