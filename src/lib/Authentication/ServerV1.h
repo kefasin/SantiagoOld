@@ -5,7 +5,7 @@
 #include <boost/asio/socket_acceptor_service.hpp>
 #include <boost/asio/error.hpp>
 
-#include "ConnectionsServer.h"
+#include "ConnectionServer.h"
 #include "RequestHandlerBase.h"
 
 using boost::asio::ip::tcp;

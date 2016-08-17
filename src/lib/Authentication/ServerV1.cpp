@@ -11,6 +11,11 @@ namespace Santiago{ namespace Authentication
                            ,std::bind(&Server::handleRequestNew,this,std::placeholders::_1)
                            ,std::bind(&Server::handleRequestReply,this,std::placeholders::_1))
     {}
+
+    void Server::start()
+    {
+        _connectionserver.start();
+    }
     
     
     void Server::handleDisconnect(unsigned connectionId_)
