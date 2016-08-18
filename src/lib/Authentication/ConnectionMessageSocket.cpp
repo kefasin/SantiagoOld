@@ -94,7 +94,7 @@ namespace Santiago{ namespace Authentication
         std::ostream outStream(&outputBuffer);
         outStream_.write(reinterpret_cast<const char*>(&bufSize), sizeof(bufSize));
         outStream_.write(reinterpret_cast<const char*>(&requestId_._initiatingConnectionId),
-                          sizeof(requestId_._initiatingConnectionId));
+                         sizeof(requestId_._initiatingConnectionId));
         outStream_.write(reinterpret_cast<const char*>(&requestId_._requestNo), sizeof(requestId_._requestNo));
         // outStream<<message_;
         message_.writeToStream(outStream);

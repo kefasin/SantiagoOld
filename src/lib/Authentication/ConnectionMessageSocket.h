@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <cstdlib>
+#include <functional>
 
 //#include <boost/asio/strand.hpp> //strand disabled for now
 #include <boost/asio.hpp>
@@ -30,9 +31,9 @@ namespace Santiago{ namespace Authentication
         typedef std::function<void()> OnDisconnectCallbackFn;
         typedef std::function<void(const RequestId&,const ConnectionMessage&)> OnMessageCallbackFn;
 
-        TCPConnection(const MySocketPtr& socketPtr_,
-                      const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
-                      const OnMessageCallbackFn& onMessageCallbackFn_);
+        ConnectionMessageSocket(const MySocketPtr& socketPtr_,
+                                const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
+                                const OnMessageCallbackFn& onMessageCallbackFn_);
 
         void sendMessage(const RequestId& requestId_,const ConnectionMessage& message_);
         void start();
@@ -45,7 +46,7 @@ namespace Santiago{ namespace Authentication
         void sendMessageImpl(const RequestId& requestId_,const ConnectionMessage& message_);
 
         MySocketPtr                             _socketPtr;
-        boost::asio::io_service                &_ioService;
+        boost::asio::io_service&                _ioService;
 //        StrandPtr                               _strandPtr;
         OnDisconnectCallbackFn                  _onDisconnectCallbackFn;
         OnMessageCallbackFn                     _onMessageCallbackFn;

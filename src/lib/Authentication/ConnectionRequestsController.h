@@ -15,6 +15,9 @@ namespace Santiago{ namespace Authentication
     {
     public:
 
+        typedef std::shared_ptr<ConnectionRequestsController> Ptr;
+        typedef ConnectionMessageSocket::Ptr ConnectionMessageSocketPtr;
+        
         typedef std::function<void(const ServerMessage&)> OnNewRequestCallbackFn;
         typedef std::function<void(const ServerMessage&)> OnRequestReplyCallbackFn;
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;

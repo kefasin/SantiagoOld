@@ -34,7 +34,7 @@ namespace Santiago{ namespace Authentication
         std::map<RequestId,RequestHandlerBasePtr>  _activeRequestHandlersList;
         ConnectionServer                           _connectionserver;
         boost::asio::io_service&                   _ioService;
-        int                                        _port;
+        unsigned                                   _port;
 
     };
 }}

@@ -6,6 +6,7 @@
 #include <boost/asio/error.hpp>
 
 #include "ConnectionController.h"
+#include "ConnectionMessageSocket.h"
 using boost::asio::ip::tcp;
 
 namespace Santiago{ namespace Authentication
@@ -14,7 +15,7 @@ namespace Santiago{ namespace Authentication
     {
     public:
 
-        typedef ConnectionMessageSocket::Ptr ConnectionMessageSocketPtr;
+        typedef ConnectionRequestsController::Ptr ConnectionRequestsControllerPtr;
         typedef std::function<void(const ServerMessage&)> OnNewRequestCallbackFn;
         typedef std::function<void(const ServerMessage&)> OnRequestReplyCallbackFn;
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
@@ -37,13 +38,13 @@ namespace Santiago{ namespace Authentication
         void sendMessage(const ServerMessage& serverMessage_);
        
         
-        tcp::acceptor                           _acceptor;
-        std::map<unsigned,ConnectionController> _idConnectionPtrMap;
-        unsigned                                _nextConnectionId;
+        tcp::acceptor                            _acceptor;
+        std::map<unsigned,ConnectionController>  _idConnectionPtrMap;
+        unsigned                                 _nextConnectionId;
 
-        onDisconnectCallbackFn                  _onDisconnectCallbackFn;
-        onNewRequestCallbackFn                  _onNewRequestCallbackFn;
-        onRequestReplyCallbackFn                _onRequestReplyCallbackFn;
+        onDisconnectCallbackFn                   _onDisconnectCallbackFn;
+        onNewRequestCallbackFn                   _onNewRequestCallbackFn;
+        onRequestReplyCallbackFn                 _onRequestReplyCallbackFn;
     };
 }}
 #endif

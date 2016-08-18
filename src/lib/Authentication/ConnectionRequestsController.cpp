@@ -2,13 +2,36 @@
 
 namespace Santiago{ namespace Authentication
 {
+
+    ConnectionRequestsController::ConnectionRequestsController(unsigned connectionId_,
+                                                               const MySocketPtr& socketPtr_,
+                                                               const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
+                                                               const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
+                                                               const OnRequestReplyCallbackFn&
+                                                               onRequestReplyCallbackFn_)
+        :_connectionId(connectionId_)
+        ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
+        ,_onNewRequestCallbackFn(onNewRequestCallbackFn_)
+        ,_onRequestReplyCallbackFn(onRequestReplyCallbackFn_)
+    {
+         std::function<void(const ConnectionMessage)> onMessageCallbackFn = 
+             std::bind(&ConnectionRequestsController:: handleConnectionMessageSocketMessage,this,
+                       std::placeholders::_1,std::placeholders::_2);
+          ConnectionMessageSocketPtr newConnectionMessageSocket(new ConnectionMessageSocket
+                                                                (socketPtr_,_onDisconnectCallbackFn,
+                                                                 onMessageCallbackFn));
+          newConnectionMessageSocket->start();
+    } 
+
+
+    
     void ConnectionRequestsController::handleConnectionMessageSocketDisconnect()
     {
         while(_replyPendingRequestList.begin() != _replyPendingRequestList.end())
         {
             RequestId requestId = _replyPendingRequestList.begin()->first;
             _replyPendingRequestList.erase(_replyPendingRequestList.begin());
-
+            
             ServerMessage serverMessage(_connectionId, requestId, ServerMessage::CONNECTION_DISCONNECT,boost::none);
             _onRequestReplyCallbackFn(serverMessage);
         }
@@ -27,7 +50,7 @@ namespace Santiago{ namespace Authentication
                 BOOST_ASSERT(false);
                 std::runtime_error("Unexpected requestId received");
             }
-
+            
             --(iter->second);
             if(0 == iter->second)
             {
@@ -51,7 +74,7 @@ namespace Santiago{ namespace Authentication
             _onRequestNewCallbackFn(serverMessage);
         }
     }
-
+    
     void ConnectionRequestsController::sendMessage(const ServerMessage& message_)
     {
         BOOST_ASSERT(message_._connectionMessage);

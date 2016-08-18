@@ -36,7 +36,7 @@ namespace Santiago{ namespace Authentication
             _serverData._activeRequestHandlersList.find(message_._requestId);
 
         BOOST_ASSERT(iter == _serverData._activeRequestHandlersList.end());
-
+        
         iter->second->handleReplyMessage(message_);
     }
 
