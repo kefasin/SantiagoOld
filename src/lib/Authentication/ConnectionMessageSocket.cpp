@@ -25,7 +25,7 @@ namespace Santiago{ namespace Authentication
                                                                      boost::asio::placeholders::bytes_transferred)/*)*/);
     }
 
-    void ConnectionMessageSocket::parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_)
+    void ConnectionMessageSocket::parseMessage(size_t bytesTransferred_)
     {
         _inputBuffer.commit(bytesTransferred_);
             
@@ -61,22 +61,16 @@ namespace Santiago{ namespace Authentication
     
     void ConnectionMessageSocket::handleRead(const boost::system::error_code& error_,size_t bytesTransferred_)
     {
-        /*
-         * TODO: Pls change to include the RequestId
-         * Format - <Total size><RequestId-8 bytes><ConnectionMessage>
-         * Parse the RequestId separately and pass it in onMessageCallbackFn - Pls note the
-         * changed format of the onMessageCallbackFn
-         */
-
+       
         if(error_)
         {
-            parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_);
+            parseMessage(bytesTransferred_);
             close();   //check for error and do cleanup.
             return;
         }
         else
         {
-            parseMessage(const boost::system::error_code& error_,size_t bytesTransferred_);
+            parseMessage(bytesTransferred_);
         }
         start();
     }
@@ -95,14 +89,15 @@ namespace Santiago{ namespace Authentication
 
     void ConnectionMessageSocket::sendMessageImpl(const RequestId& requestId_, const ConnectionMessage& message_)
     {
-        /*
-         * TODO: Make code to write the size and the requestId to the buffer before
-         * writing the ConnectionMessage.
-         * size = 4 + 8(for RequestId) + connectionMessage size 
-         */
+        unsigned bufSize = sizeof(unsigned) + sizeof(unsigned) + sizeof(unsigned)+ message_.getSize();
         boost::asio::streambuf outputBuffer;
         std::ostream outStream(&outputBuffer);
-        outStream<<message_;
+        outStream_.write(reinterpret_cast<const char*>(&bufSize), sizeof(bufSize));
+        outStream_.write(reinterpret_cast<const char*>(&requestId_._initiatingConnectionId),
+                          sizeof(requestId_._initiatingConnectionId));
+        outStream_.write(reinterpret_cast<const char*>(&requestId_._requestNo), sizeof(requestId_._requestNo));
+        // outStream<<message_;
+        message_.writeToStream(outStream);
 
         boost::system::error_code errorCode;
         BOOST_ASSERT(_socketPtr);
