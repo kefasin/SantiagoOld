@@ -29,9 +29,10 @@ namespace Santiago{ namespace Authentication
         //push that into the ServerData._activeRrequestHandlersList
         //call requestHandlerPtr->start()
         RequestHandlerBasePtr requestHandlerPtr;
+        requestHandlerPtr.reset(new RequestHandlerBase(message_._connectionMessage->_type));
         ServerData serverData;
-        serverData._activeRequestHandlersList.insert
-        requestHandlerPtr->start()
+        serverData._activeRequestHandlersList.insert(std::make_pair(message_.requestId,requestHandlerPtr));
+        requestHandlerPtr->start();
         
     }
 

@@ -6,7 +6,9 @@
 #include <boost/asio/error.hpp>
 
 #include "ConnectionServer.h"
-#include "RequestHandlerBase.h"
+//#include "RequestHandlerBase.h"
+#include "ServerData.h"
+
 
 using boost::asio::ip::tcp;
 
@@ -31,8 +33,9 @@ namespace Santiago{ namespace Authentication
         
         std::map<std::string,CookieData>           _cookieCookieDataMap;
         std::map<std::string,UserIdData>           _userIdUserIdDataMap;
-        std::map<RequestId,RequestHandlerBasePtr>  _activeRequestHandlersList;
+        // std::map<RequestId,RequestHandlerBasePtr>  _activeRequestHandlersList;
         ConnectionServer                           _connectionServer;
+        ConnectionMessage                          _connectionMessage;
         boost::asio::io_service&                   _ioService;
         unsigned                                   _port;
 
