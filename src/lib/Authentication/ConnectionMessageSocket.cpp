@@ -33,19 +33,19 @@ namespace Santiago{ namespace Authentication
         {
             unsigned messageSize = *(reinterpret_cast<const unsigned*>
                                      (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
-            _inputBuffer.consume(sizeof(unsigned));
-            RequestId requestId;
-            requestId._initiatingConnectionId = *(reinterpret_cast<const unsigned*>
-                                                  (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
-            _inputBuffer.consume(sizeof(unsigned));
-            requestId._requestNo = *(reinterpret_cast<const unsigned*>
-                                     (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
             
-            
-            const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
-            
-            if(_inputBuffer.size() >= messageSize-12)
+            if(_inputBuffer.size() >= messageSize)
             {
+                _inputBuffer.consume(sizeof(unsigned));
+                RequestId requestId;
+                requestId._initiatingConnectionId = *(reinterpret_cast<const unsigned*>
+                                                      (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+                _inputBuffer.consume(sizeof(unsigned));
+                requestId._requestNo = *(reinterpret_cast<const unsigned*>
+                                         (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+                _inputBuffer.consume(sizeof(unsigned));
+                
+                const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
                 ConnectionMessage message(inputBufferData,messageSize-12);
                 _inputBuffer.consume(messageSize-12);
                 _onMessageCallbackFn(requestId,message);
