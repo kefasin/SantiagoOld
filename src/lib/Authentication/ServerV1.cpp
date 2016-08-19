@@ -5,7 +5,7 @@ namespace Santiago{ namespace Authentication
     Server::Server(boost::asio::io_service& ioService_,int port_)
         :_ioService(ioService_)
         ,_port(port_)
-        ,_connectionserver(_ioService
+        ,_connectionServer(_ioService
                            ,_port
                            ,std::bind(&Server::handleDisconnect,this,std::placeholders::_1)
                            ,std::bind(&Server::handleRequestNew,this,std::placeholders::_1)
@@ -14,7 +14,7 @@ namespace Santiago{ namespace Authentication
 
     void Server::start()
     {
-        _connectionserver.start();
+        _connectionServer.start();
     }
     
     
@@ -28,6 +28,11 @@ namespace Santiago{ namespace Authentication
         //TODO: create request handler shared_ptr of the correct type using message_._connectionMessage->_type
         //push that into the ServerData._activeRrequestHandlersList
         //call requestHandlerPtr->start()
+        RequestHandlerBasePtr requestHandlerPtr;
+        ServerData serverData;
+        serverData._activeRequestHandlersList.insert
+        requestHandlerPtr->start()
+        
     }
 
     void Server::handleRequestReply(const ServerMessage& message_)

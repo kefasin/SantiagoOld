@@ -1,7 +1,9 @@
 #ifndef SANTIAGO_AUTHENTICATION_SERVER_MESSAGE_H
 #define SANTIAGO_AUTHENTICATION_SERVER_MESSAGE_H
 
+#include <boost/optional.hpp>
 #include "ConnectionMessage.h"
+
 
 namespace Santiago{ namespace Authentication
 {
@@ -32,12 +34,12 @@ namespace Santiago{ namespace Authentication
         ServerMessage(unsigned connectionId_,
                       const RequestId& requestId_,
                       ServerMessageType type_,
-                      const Optional<ConnectionMessage>& connectionMessage_);
+                      const boost::optional<ConnectionMessage>& connectionMessage_);
 
-        unsigned                       _connectionId;
-        RequestId                      _requestId;
-        ServerMessageType              _type;
-        Optional<ConnectionMessage>    _connectionMessage;
+        unsigned                              _connectionId;
+        RequestId                             _requestId;
+        ServerMessageType                     _type;
+        boost::optional<ConnectionMessage>    _connectionMessage;
 //        std::string                    _dbMessage;
     };
 

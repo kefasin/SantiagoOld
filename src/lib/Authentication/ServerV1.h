@@ -32,7 +32,7 @@ namespace Santiago{ namespace Authentication
         std::map<std::string,CookieData>           _cookieCookieDataMap;
         std::map<std::string,UserIdData>           _userIdUserIdDataMap;
         std::map<RequestId,RequestHandlerBasePtr>  _activeRequestHandlersList;
-        ConnectionServer                           _connectionserver;
+        ConnectionServer                           _connectionServer;
         boost::asio::io_service&                   _ioService;
         unsigned                                   _port;
 

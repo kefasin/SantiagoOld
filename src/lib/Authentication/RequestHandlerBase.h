@@ -1,9 +1,9 @@
 #ifndef SANTIAGO_AUTHENTICATION_CONNECTIONCONTROLLER_H
 #define SANTIAGO_AUTHENTICATION_CONNECTIONCONTROLLER_H
 
-#include <function>
+#include <functional>
 
-#include "Message.h"
+#include "ServerMessage.h"
 
 namespace Santiago{ namespace Authentication
 {
