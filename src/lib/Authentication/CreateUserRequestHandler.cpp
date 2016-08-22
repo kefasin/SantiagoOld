@@ -3,9 +3,9 @@
 
 namespace Santiago{namespace Authentication
 {
-    CreateUserRequestHandler(ConnectionServer& connectionServer_
-                             ,const OnCompletedCallbackFn& onCompletedCallbackFn_
-                             ,const ServerMessage& initiatingMessage_)
+    CreateUserRequestHandler::CreateUserRequestHandler(ConnectionServer& connectionServer_
+                                                       ,const OnCompletedCallbackFn& onCompletedCallbackFn_
+                                                       ,const ServerMessage& initiatingMessage_)
         :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
     {}
 
