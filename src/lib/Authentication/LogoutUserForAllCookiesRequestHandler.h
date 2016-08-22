@@ -9,10 +9,9 @@ namespace Santiago{ namespace Authentication
     class LogoutUserForAllCookiesRequestHandler:public RequestHandlerBase
     {
     public:
-        LogoutUserForAllCookiesRequestHandler(const RequestId& requestId_,
-                                              ConnectionServer& connectionServer_,
-                                              const OnCompletedCallbackFn& onCompletedCallbackFn_,
-                                              const ServerMessage& initiatingMessage_);
+        LogoutUserForAllCookiesRequestHandler(ConnectionServer& connectionServer_
+                                              ,const OnCompletedCallbackFn& onCompletedCallbackFn_
+                                              ,const ServerMessage& initiatingMessage_);
         virtual void start();
         virtual void handleReplyMessage(const ServerMessage& serverMessage);
         

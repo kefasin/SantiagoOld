@@ -1,17 +1,17 @@
-#include "LogoutUserForCookieRequestHandler.h"
+#include "VerifyUserForCookieRequestHandler.h"
 
 namespace Santiago{ namespace Authentication
 {
 
-    LogoutUserForCookieRequestHandler::LogoutUserForCookieRequestHandler(ConnectionServer& connectionServer_
+    VerifyUserForCookieRequestHandler::VerifyUserForCookieRequestHandler(ConnectionServer& connectionServer_
                                                                          ,const OnCompletedCallbackFn& onCompletedCallbackFn_
                                                                          ,const ServerMessage& initiatingMessage_)
         :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
     {}
     
-    virtual void LogoutUserForCookieRequestHandler::start()
+    virtual void VerifyUserForCookieRequestHandler::start()
     {
-        if(_databaseConnector.logoutUserForCookie(_message._connectionMessage._parameters[0]))
+        if(_databaseConnector.logoutUserForCookie(_initiatingMessage._connectionMessage._parameters[0]))
         {
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
@@ -29,7 +29,7 @@ namespace Santiago{ namespace Authentication
         }
     }
     
-    virtual void LogoutUserForCookieRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
+    virtual void VerifyUserForCookieRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
     {
         BOOST_ASSERT(false);
     }

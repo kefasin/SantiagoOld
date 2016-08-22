@@ -6,11 +6,10 @@
 
 namespace Santiago{ namespace Authentication
 {
-    class ChangeUserPasswordeRequestHandler:public RequestHandlerBase
+    class ChangeUserPasswordRequestHandler:public RequestHandlerBase
     {
     public:
-        ChangeUserPasswordRequestHandler(const RequestId& requestId_,
-                                         ConnectionServer& connectionServer_,
+        ChangeUserPasswordRequestHandler(ConnectionServer& connectionServer_,
                                          const OnCompletedCallbackFn& onCompletedCallbackFn_,
                                          const ServerMessage& initiatingMessage_);
         virtual void start();

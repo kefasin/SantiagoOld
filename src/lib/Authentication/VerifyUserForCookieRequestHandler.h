@@ -1,15 +1,15 @@
-#ifndef SANTIAGO_AUTHENTICATION_LOGOUTUSERFORCOOKIEREQUESTHANDLER_H
-#define SANTIAGO_AUTHENTICATION_LOGOUTUSERFORCOOKIEREQUESTHANDLER_H
+#ifndef SANTIAGO_AUTHENTICATION_VERIFYUSERFORCOOKIEREQUESTHANDLER_H
+#define SANTIAGO_AUTHENTICATION_VERIFYUSERFORCOOKIEREQUESTHANDLER_H
 
 #include "RequestHandlerBase.h"
 #include "Database/MariaDBConnections.h"
 
 namespace Santiago{ namespace Authentication
 {
-    class LogoutUserForCookieRequestHandler:public RequestHandlerBase
+    class VerifyUserForCookieRequestHandler:public RequestHandlerBase
     {
     public:
-        LogoutUserForCookieRequestHandler(ConnectionServer& connectionServer_
+        VerifyUserForCookieRequestHandler(ConnectionServer& connectionServer_
                                           ,const OnCompletedCallbackFn& onCompletedCallbackFn_
                                           ,const ServerMessage& initiatingMessage_);
         virtual void start();

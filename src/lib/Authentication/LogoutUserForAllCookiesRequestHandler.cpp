@@ -3,16 +3,15 @@
 namespace Santiago{ namespace Authentication
 {
     
-    LogoutUserForAllCookiesRequestHandler::LogoutUserForAllCookiesRequestHandler(const RequestId& requestId_,
-                                                                                 ConnectionServer& connectionServer_,
-                                                                                 const OnCompletedCallbackFn& onCompletedCallbackFn_,
-                                                                                 const ServerMessage& initiatingMessage_)
+    LogoutUserForAllCookiesRequestHandler::LogoutUserForAllCookiesRequestHandler(ConnectionServer& connectionServer_,
+                                                                                 const OnCompletedCallbackFn& onCompletedCallbackFn_
+                                                                                 ,const ServerMessage& initiatingMessage_)
         :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
     {}
     
     virtual void LogoutUserForAllCookiesRequestHandler::start()
     {
-        if(_databaseConnector.logoutUserForCookie(_message._connectionMessage._parameters[0]))
+        if(_databaseConnector.logoutUserForCookie(_initiatingMessage._connectionMessage._parameters[0]))
         {
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
