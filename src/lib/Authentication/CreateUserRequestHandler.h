@@ -14,6 +14,7 @@ namespace Santiago{namespace Authentication
                                  ,const OnCompletedCallbackFn& onCompletedCallbackFn_
                                  ,const ServerMessage& initiatingMessage_);
         virtual void start();
+	virtual void handleReplyMessage(const ServerMessage& serverMessage);
 
     private:
         
