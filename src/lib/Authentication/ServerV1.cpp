@@ -25,13 +25,67 @@ namespace Santiago{ namespace Authentication
 
     void Server::handleRequestNew(const ServerMessage& message_)
     {
-        //TODO: create request handler shared_ptr of the correct type using message_._connectionMessage->_type
-        //push that into the ServerData._activeRrequestHandlersList
-        //call requestHandlerPtr->start()
-        RequestHandlerBasePtr requestHandlerPtr;
-        requestHandlerPtr.reset(new RequestHandlerBase(message_._connectionMessage->_type));
-        ServerData serverData;
-        serverData._activeRequestHandlersList.insert(std::make_pair(message_.requestId,requestHandlerPtr));
+        switch(message_._connectionMessage->_type)
+        {
+        case CR_CREATE_USER:
+            RequestHandlerBasePtr requestHandlerPtr(new CreateUserRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            
+            break;
+        case CR_LOGIN_USER:
+            RequestHandlerBasePtr requestHandlerPtr(new LoginUserRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+        case CR_VERIFY_USER_FOR_COOKIE:
+             RequestHandlerBasePtr requestHandlerPtr(new VerifyUserForCookieRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+        case CR_LOGOUT_USER_FOR_COOKIE:
+             RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForCookieRequestHandler
+                                                     (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                      ,message_._connectionMessage));
+            break;
+        case CR_LOGOUT_USER_FOR_ALL_COOKIES:
+            RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForAllCookiesRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+        case CR_CHANGE_USER_PASSWORD:
+             RequestHandlerBasePtr requestHandlerPtr(new ChangeUserPasswordRequestHandler
+                                                     (_connectionServer
+                                                      ,std::bind(&Server:handleRequestCompleted
+                                                                 ,this,std::placeholders::_1)
+                                                      ,message_._connectionMessage));
+             break;
+        case SR_LOGOUT_USER_FOR_COOKIE:
+            RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForCookieRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+        case SR_LOGOUT_USER_FOR_ALL_COOKIES:
+            RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForAllCookiesRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+        }
+        _serverData._activeRequestHandlersList.insert(std::make_pair(message_.requestId,requestHandlerPtr));
         requestHandlerPtr->start();
         
     }
