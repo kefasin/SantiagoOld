@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "ServerMessage.h"
+#include "Database/MariaDBConnections.h"
 
 namespace Santiago{ namespace Authentication
 {
@@ -25,9 +26,11 @@ namespace Santiago{ namespace Authentication
 
     protected:
 
-        ConnectionServer&            _connectionServer;
-        OnCompletedCallbackFn        _onCompletedCallbackFn;
-        ServerMessage                _initiatingMessage;
+        ConnectionServer&              _connectionServer;
+        OnCompletedCallbackFn          _onCompletedCallbackFn;
+        ServerMessage                  _initiatingMessage;
+
+        Database::MariaDBConnections   _databaseConnector; 
 
     };
 

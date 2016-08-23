@@ -19,6 +19,7 @@ namespace Santiago{ namespace Authentication
                                         ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
                                         ,_initiatingMessage->_connectionMessage(SUCCEEDED,std::vector<std::string>));
             
+            _connectionServer.sendMessage(serverMessage);
             _onCompletedCallbackFn(_initiatingMessage._requestId);
         }
         else

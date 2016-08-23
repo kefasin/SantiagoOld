@@ -3,8 +3,8 @@
 namespace Santiago{ namespace Authentication
 {
     
-    LogoutUserForAllCookiesRequestHandler::LogoutUserForAllCookiesRequestHandler(ConnectionServer& connectionServer_,
-                                                                                 const OnCompletedCallbackFn& onCompletedCallbackFn_
+    LogoutUserForAllCookiesRequestHandler::LogoutUserForAllCookiesRequestHandler(ConnectionServer& connectionServer_
+                                                                                 ,const OnCompletedCallbackFn& onCompletedCallbackFn_
                                                                                  ,const ServerMessage& initiatingMessage_)
         :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
     {}
@@ -17,7 +17,8 @@ namespace Santiago{ namespace Authentication
                                         ,_initiatingMessage._requestId
                                         ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
                                         ,_initiatingMessage->_connectionMessage(SUCCEEDED,std::vector<std::string>));
-            
+
+            _connectionServer.sendMessage(serverMessage);
             _onCompletedCallbackFn(_initiatingMessage._requestId);
         }
         else
