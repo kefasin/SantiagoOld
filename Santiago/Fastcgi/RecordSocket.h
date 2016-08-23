@@ -32,7 +32,7 @@
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
 
-#include "fastcgi_devkit/fastcgi.h"
+#include "Santiago/fastcgi_devkit/fastcgi.h"
 
 #include "PacketSocket.h"
 
