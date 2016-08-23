@@ -39,6 +39,15 @@ namespace Santiago{ namespace Authentication
         // newConnection->start();
         ++_nextConnectionId;
     }
+
+    void ConnectionServer handleDisconnect(unsigned connectionId_)
+    {
+         std::map< std::map<unsigned,ConnectionRequestController>>::iterator iter =
+             _idConnectionPtrMap.find(connectionId_);
+         
+         BOOST_ASSERT(iter == _idConnectionPtrMap.end());
+         _idConnectionPtrMap.erase(iter);
+    }
     
     
     }}
