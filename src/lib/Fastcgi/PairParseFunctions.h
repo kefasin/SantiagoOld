@@ -31,7 +31,7 @@
 #include <string>
 #include <cstring>
 
-#include "Santiago/fastcgi_devkit/fastcgi.h"
+#include "fastcgi_devkit/fastcgi.h"
 
 #include "Common.h"
 
