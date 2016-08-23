@@ -37,7 +37,7 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
-#include "fastcgi_devkit/fastcgi.h"
+#include "Santiago/fastcgi_devkit/fastcgi.h"
 
 #include "Common.h"
 
