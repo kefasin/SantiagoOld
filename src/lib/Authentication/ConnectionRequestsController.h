@@ -6,7 +6,7 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
-#include "Message.h"
+#include "ServerMessage.h"
 #include "ConnectionMessageSocket.h"
 
 namespace Santiago{ namespace Authentication
@@ -23,7 +23,7 @@ namespace Santiago{ namespace Authentication
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
 
         ConnectionRequestsController(unsigned connectionId_,
-                                     const MySocketPtr& socketPtr_,
+                                     const ConnectionMessageSocket::MySocketPtr& socketPtr_,
                                      const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                                      const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
                                      const OnRequestReplyCallbackFn& onRequestReplyCallbackFn_);

@@ -4,6 +4,7 @@
 
 #include <boost/asio/socket_acceptor_service.hpp>
 #include <boost/asio/error.hpp>
+#include <boost/optional.hpp>
 
 #include "ConnectionServer.h"
 //#include "RequestHandlerBase.h"

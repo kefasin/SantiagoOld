@@ -4,7 +4,7 @@ namespace Santiago{ namespace Authentication
 {
 
     ConnectionRequestsController::ConnectionRequestsController(unsigned connectionId_,
-                                                               const MySocketPtr& socketPtr_,
+                                                               const ConnectionMessageSocket::MySocketPtr& socketPtr_,
                                                                const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                                                                const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
                                                                const OnRequestReplyCallbackFn&

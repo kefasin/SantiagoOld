@@ -94,11 +94,6 @@ namespace Santiago{ namespace Authentication
         std::map<RequestId,RequestHandlerBasePtr>::iterator iter =
             _serverData._activeRequestHandlersList.find(message_._requestId);
 
-        BOOST_ASSERT(iter == _serverData._activeRequestHandlersList.end());
-        
-        iter->second->handleReplyMessage(message_);
-    }
-
     void Server::handleRequestCompleted(const RequestId& requestId_)
     {
         std::map<RequestId,RequestHandlerBasePtr>::iterator iter =
