@@ -6,8 +6,8 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
-#include "Message.h"
-#include "TCPConnection.h"
+#include "ServerMessage.h"
+#include "ConnectionMessageSocket.h"
 
 namespace Santiago{ namespace Authentication
 {
@@ -15,12 +15,15 @@ namespace Santiago{ namespace Authentication
     {
     public:
 
+        typedef std::shared_ptr<ConnectionRequestsController> Ptr;
+        typedef ConnectionMessageSocket::Ptr ConnectionMessageSocketPtr;
+        
         typedef std::function<void(const ServerMessage&)> OnNewRequestCallbackFn;
         typedef std::function<void(const ServerMessage&)> OnRequestReplyCallbackFn;
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
 
         ConnectionRequestsController(unsigned connectionId_,
-                                     const MySocketPtr& socketPtr_,
+                                     const ConnectionMessageSocket::MySocketPtr& socketPtr_,
                                      const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                                      const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
                                      const OnRequestReplyCallbackFn& onRequestReplyCallbackFn_);
@@ -30,11 +33,11 @@ namespace Santiago{ namespace Authentication
 
     protected:
 
-        void handleTCPConnectionDisconnect();
-        void handleTCPConnectionMessage(const RequestId& requestId_, const ConnectionMessage& message_);
+        void handleConnectionMessageSocketDisconnect();
+        void handleConnectionMessageSocketMessage(const RequestId& requestId_, const ConnectionMessage& message_);
 
         unsigned                      _connectionId;
-        TCPConnection                 _tcpConnection;
+        ConnectionMessageSocket       _connectionmessagesocket;
         OnDisconnectCallbackFn        _onDisconnectCallbackFn;
         OnNewRequestCallbackFn        _onNewRequestCallbackFn;
         OnRequestReplyCallbackFn      _onRequestReplyCallbackFn;

@@ -315,7 +315,7 @@ namespace Santiago{ namespace Database
     }
         
     bool MariaDBConnections::addSessionRecord(const std::string userName_,
-                                                  const std::string cookieId_, ptime loginTime_)
+                                              const std::string cookieId_, ptime loginTime_)
     {
         MYSQL* con = mysql_init(NULL);
         if (con == NULL) 
