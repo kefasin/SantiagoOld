@@ -13,7 +13,7 @@ namespace Santiago{ namespace Authentication
     {
         if(_databaseConnector.addPermissionrecord(_initiatingMessage._connectionMessage._parameters[0],
                                                   _initiatingMessage._connectionMessage._parameters[1],
-                                                  _initiatingMessage._connectionMessage._parameters[2]))
+                                                  Database::UserPermission::OWNER))
         {
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId

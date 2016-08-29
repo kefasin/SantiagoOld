@@ -75,6 +75,21 @@ namespace Santiago{ namespace Authentication
                                                                  ,this,std::placeholders::_1)
                                                       ,message_._connectionMessage));
              break;
+        case CR_REMOVED_COOKIE_FROM_APPSERVER:
+            RequestHandlerBasePtr requestHandlerPtr(new RemovedCookieFromAppserverRequestHandler
+                                                    (_connectionServer
+                                                     ,std::bind(&Server:handleRequestCompleted
+                                                                ,this,std::placeholders::_1)
+                                                     ,message_._connectionMessage));
+            break;
+
+        case CR_ADD_RESOURCE:
+             RequestHandlerBasePtr requestHandlerPtr(new AddResourceRequestHandler
+                                                     (_connectionServer
+                                                      ,std::bind(&Server:handleRequestCompleted
+                                                                 ,this,std::placeholders::_1)
+                                                      ,message_._connectionMessage));
+             break;
              
         case SR_LOGOUT_USER_FOR_COOKIE:
             BOOST_ASSERT(false);
@@ -84,7 +99,7 @@ namespace Santiago{ namespace Authentication
             BOOST_ASSERT(false);
             break;
         }
-        _serverData._activeRequestHandlersList.insert(std::make_pair(message_.requestId,requestHandlerPtr));
+        _activeRequestHandlersList.insert(std::make_pair(message_.requestId,requestHandlerPtr));
         requestHandlerPtr->start();
         
     }
@@ -92,16 +107,16 @@ namespace Santiago{ namespace Authentication
     void Server::handleRequestReply(const ServerMessage& message_)
     {
         std::map<RequestId,RequestHandlerBasePtr>::iterator iter =
-            _serverData._activeRequestHandlersList.find(message_._requestId);
+            _activeRequestHandlersList.find(message_._requestId);
 
     void Server::handleRequestCompleted(const RequestId& requestId_)
     {
         std::map<RequestId,RequestHandlerBasePtr>::iterator iter =
-            _serverData._activeRequestHandlersList.find(message_._requestId);
+            _activeRequestHandlersList.find(message_._requestId);
         
-        BOOST_ASSERT(iter == _serverData._activeRequestHandlersList.end());
+        BOOST_ASSERT(iter == _activeRequestHandlersList.end());
 
-        _serverData._activeRequestHandlersList.erase(iter);
+        _activeRequestHandlersList.erase(iter);
     }
 
 
