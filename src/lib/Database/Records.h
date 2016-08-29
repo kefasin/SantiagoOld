@@ -14,6 +14,7 @@ namespace Santiago{ namespace Database
 {
     enum UserPermission 
     {
+        OWNER,
         READ,
         WRITE,
         READ_WRITE
