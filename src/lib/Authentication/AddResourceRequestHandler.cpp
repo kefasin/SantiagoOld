@@ -11,7 +11,7 @@ namespace Santiago{ namespace Authentication
     
     virtual void  AddResourceRequestHandler::start()
     {
-        if(_databaseConnector.addPermissionrecord(_initiatingMessage._connectionMessage._parameters[0],
+        if(_databaseInterface.addResource(_initiatingMessage._connectionMessage._parameters[0],
                                                   _initiatingMessage._connectionMessage._parameters[1],
                                                   Database::UserPermission::OWNER))
         {

@@ -11,7 +11,7 @@ namespace Santiago{ namespace Authentication
     
     virtual void LogoutUserForAllCookiesRequestHandler::start()
     {
-        if(_databaseConnector.logoutUserForCookie(_initiatingMessage._connectionMessage._parameters[0]))
+        if(_databaseInterface.logoutUserForAllCookies(_initiatingMessage._connectionMessage._parameters[0]))
         {
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId

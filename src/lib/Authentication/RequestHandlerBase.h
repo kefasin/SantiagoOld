@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "ServerMessage.h"
-#include "Database/MariaDBConnections.h"
+#include "DatabaseInterface.h"
 #include "ServerData.h"
 
 namespace Santiago{ namespace Authentication
@@ -32,7 +32,7 @@ namespace Santiago{ namespace Authentication
         ServerMessage                  _initiatingMessage;
         ServerData&                    _serverData;
 
-        Database::MariaDBConnections   _databaseConnector; 
+        DatabaseInterface              _databaseInterface; 
 
     };
 

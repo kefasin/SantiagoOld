@@ -11,8 +11,8 @@ namespace Santiago{namespace Authentication
 
     virtual void CreateUserRequestHandler::start()
     {
-        if(_databaseConnector.addUserProfileRecord(_initiatingMessage._connectionMessage._parameters[0],
-                                                   _initiatingMessage._connectionMessage._parameters[1]))
+        if(_databaseInterface.createUser(_initiatingMessage._connectionMessage._parameters[0],
+                                         _initiatingMessage._connectionMessage._parameters[1]))
         {
 
             ServerMessage serverMessage(_initiatingMessage._connectionId

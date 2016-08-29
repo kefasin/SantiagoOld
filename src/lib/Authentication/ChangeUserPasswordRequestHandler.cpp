@@ -11,7 +11,7 @@ namespace Santiago{ namespace Authentication
     
     virtual void ChangeUserPasswordRequestHandler::start()
     {
-        if(_databaseConnector.updateUserPassword(_initiatingMessage._connectionMessage._parameters[0],
+        if(_databaseInterface.changeUserPassword(_initiatingMessage._connectionMessage._parameters[0],
                                                  _initiatingMessage._connectionMessage._parameters[1],
                                                  _initiatingMessage._connectionMessage._parameters[2]))
         {

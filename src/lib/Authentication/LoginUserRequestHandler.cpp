@@ -11,7 +11,7 @@ namespace Santiago{ namespace Authentication
     
     virtual void LoginUserRequestHandler::start()
     {
-        if(_databaseConnector.loginUser(_initiatingMessage._connectionMessage._parameters[0]
+        if(_databaseInterface.loginUser(_initiatingMessage._connectionMessage._parameters[0]
                                         ,_initiatingMessage._connectionMessage._parameters[1]))
         {
             ServerMessage serverMessage(_initiatingMessage._connectionId
