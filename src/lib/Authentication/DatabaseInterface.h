@@ -1,8 +1,6 @@
 #ifndef SANTIAGO_AUTHENTICATION_DATABASEINTERFACE_H
 #define SANTIAGO_AUTHENTICATION_DATABASEINTERFACE_H
 
-#include <ctime>
-#include <functional>
 #include <vector>
 #include <cstdlib>
 #include <string>
