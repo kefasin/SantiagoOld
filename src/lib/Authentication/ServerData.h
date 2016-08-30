@@ -1,6 +1,9 @@
 #ifndef SANTIAGO_AUTHENTICATION_SERVERDATA_H
 #define SANTIAGO_AUTHENTICATION_SERVERDATA_H
 
+#include <map>
+#include <string>
+#include <vector>
 
 namespace Santiago{ namespace Authentication
 {

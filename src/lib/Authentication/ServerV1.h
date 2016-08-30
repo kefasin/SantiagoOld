@@ -7,7 +7,8 @@
 #include <boost/optional.hpp>
 
 #include "ConnectionServer.h"
-//#include "ServerData.h"
+#include "ServerMessage.h"
+#include "RequestHandlerBase.h"
 
 
 using boost::asio::ip::tcp;
@@ -34,7 +35,6 @@ namespace Santiago{ namespace Authentication
         std::map<RequestId,RequestHandlerBasePtr>   _activeRequestHandlersList;
         ConnectionServer                            _connectionServer;
         ConnectionMessage                           _connectionMessage;
-        // ServerData                                  _serverData;
         boost::asio::io_service&                    _ioService;
         unsigned                                    _port;
 
