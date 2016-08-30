@@ -5,12 +5,15 @@ set(Authentication_SRCS
   ConnectionServer.cpp
   ConnectionRequestsController.cpp
   ConnectionMessageSocket.cpp
+  DatabaseInterface.cpp
   CreateUserRequestHandler.cpp
   LoginUserRequestHandler.cpp
   VerifyUserForCookieRequestHandler.cpp
   ChangeUserPasswordRequestHandler.cpp
   LogoutUserForCookieRequestHandler.cpp
-  LogoutUserForAllCookiesRequestHandler.cpp)
+  LogoutUserForAllCookiesRequestHandler.cpp
+  AddResourceRequestHandler.cpp
+  RemovedCookieFromAppserverRequestHandler.cpp)
 
 if(WIN32)
   set(Authentication_SRCS ${Authentication_SRCS}   
@@ -20,13 +23,16 @@ if(WIN32)
   ConnectionServer.h
   ConnectionRequestsController.h
   ConnectionMessageSocket.h
+  DatabaseInterface.h
   RequestHandlerBase.h
   CreateUserRequestHandler.h
   LoginUserRequestHandler.h
   VerifyUserForCookieRequestHandler.h
   ChangeUserPasswordRequestHandler.h
   LogoutUserForCookieRequestHandler.h
-  LogoutUserForAllCookiesRequestHandler.h)
+  LogoutUserForAllCookiesRequestHandler.h
+  AddResourceRequestHandler.h
+  RemovedCookieFromAppserverRequestHandler.h)
 endif(WIN32)
 
 add_library(Authentication STATIC ${Authentication_SRCS})
