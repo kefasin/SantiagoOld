@@ -25,7 +25,7 @@ namespace Santiago{ namespace Authentication
     }
     
     virtual void RemovedCookieFromAppserverRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
-    {
+    { 
         BOOST_ASSERT(false);
     }
     
