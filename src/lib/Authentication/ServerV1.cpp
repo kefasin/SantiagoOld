@@ -2,7 +2,7 @@
 
 namespace Santiago{ namespace Authentication
 {
-    Server::Server(boost::asio::io_service& ioService_,int port_)
+    Server::Server(boost::asio::io_service& ioService_,unsigned port_)
         :_ioService(ioService_)
         ,_port(port_)
         ,_connectionServer(_ioService
@@ -31,7 +31,7 @@ namespace Santiago{ namespace Authentication
         case CR_CREATE_USER:
             RequestHandlerBasePtr requestHandlerPtr(new CreateUserRequestHandler
                                                     (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                     ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                      ,message_._connectionMessage));
             
@@ -39,7 +39,7 @@ namespace Santiago{ namespace Authentication
         case CR_LOGIN_USER:
             RequestHandlerBasePtr requestHandlerPtr(new LoginUserRequestHandler
                                                     (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                     ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                      ,message_._connectionMessage));
             break;
@@ -47,7 +47,7 @@ namespace Santiago{ namespace Authentication
         case CR_VERIFY_USER_FOR_COOKIE:
              RequestHandlerBasePtr requestHandlerPtr(new VerifyUserForCookieRequestHandler
                                                     (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                     ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                      ,message_._connectionMessage));
             break;
@@ -55,7 +55,7 @@ namespace Santiago{ namespace Authentication
         case CR_LOGOUT_USER_FOR_COOKIE:
              RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForCookieRequestHandler
                                                      (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                      ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                       ,message_._connectionMessage));
             break;
@@ -63,7 +63,7 @@ namespace Santiago{ namespace Authentication
         case CR_LOGOUT_USER_FOR_ALL_COOKIES:
             RequestHandlerBasePtr requestHandlerPtr(new LogoutUserForAllCookiesRequestHandler
                                                     (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                     ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                      ,message_._connectionMessage));
             break;
@@ -71,14 +71,14 @@ namespace Santiago{ namespace Authentication
         case CR_CHANGE_USER_PASSWORD:
              RequestHandlerBasePtr requestHandlerPtr(new ChangeUserPasswordRequestHandler
                                                      (_connectionServer
-                                                      ,std::bind(&Server:handleRequestCompleted
+                                                      ,std::bind(&Server::handleRequestCompleted
                                                                  ,this,std::placeholders::_1)
                                                       ,message_._connectionMessage));
              break;
         case CR_REMOVED_COOKIE_FROM_APPSERVER:
             RequestHandlerBasePtr requestHandlerPtr(new RemovedCookieFromAppserverRequestHandler
                                                     (_connectionServer
-                                                     ,std::bind(&Server:handleRequestCompleted
+                                                     ,std::bind(&Server::handleRequestCompleted
                                                                 ,this,std::placeholders::_1)
                                                      ,message_._connectionMessage));
             break;
@@ -86,7 +86,7 @@ namespace Santiago{ namespace Authentication
         case CR_ADD_RESOURCE:
              RequestHandlerBasePtr requestHandlerPtr(new AddResourceRequestHandler
                                                      (_connectionServer
-                                                      ,std::bind(&Server:handleRequestCompleted
+                                                      ,std::bind(&Server::handleRequestCompleted
                                                                  ,this,std::placeholders::_1)
                                                       ,message_._connectionMessage));
              break;
@@ -108,6 +108,7 @@ namespace Santiago{ namespace Authentication
     {
         std::map<RequestId,RequestHandlerBasePtr>::iterator iter =
             _activeRequestHandlersList.find(message_._requestId);
+    }
 
     void Server::handleRequestCompleted(const RequestId& requestId_)
     {

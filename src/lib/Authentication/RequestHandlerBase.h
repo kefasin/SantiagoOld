@@ -6,6 +6,7 @@
 #include "ServerMessage.h"
 #include "DatabaseInterface.h"
 #include "ServerData.h"
+#include "ConnectionServer.h"
 
 namespace Santiago{ namespace Authentication
 {
@@ -30,7 +31,7 @@ namespace Santiago{ namespace Authentication
         ConnectionServer&              _connectionServer;
         OnCompletedCallbackFn          _onCompletedCallbackFn;
         ServerMessage                  _initiatingMessage;
-        ServerData&                    _serverData;
+        ServerData                    _serverData;
 
         DatabaseInterface              _databaseInterface; 
 

@@ -8,7 +8,18 @@
 
 #include "ConnectionServer.h"
 #include "ServerMessage.h"
-#include "RequestHandlerBase.h"
+
+#include "CreateUserRequestHandler.h"
+#include "LoginUserRequestHandler.h"
+#include "VerifyUserForCookieRequestHandler.h"
+#include "LogoutUserForCookieRequestHandler.h"
+#include "LogoutUserForAllCookiesRequestHandler.h"
+#include "ChangeUserPasswordRequestHandler.h"
+#include "RemovedCookieFromAppserverRequestHandler.h"
+#include "AddResourceRequestHandler.h"
+
+
+
 
 
 using boost::asio::ip::tcp;
@@ -21,7 +32,7 @@ namespace Santiago{ namespace Authentication
 
         typedef std::shared_ptr<RequestHandlerBase> RequestHandlerBasePtr;
 
-        Server(boost::asio::io_service& ioService_,int port_);
+        Server(boost::asio::io_service& ioService_,unsigned port_);
 
         void start();
 
@@ -33,11 +44,10 @@ namespace Santiago{ namespace Authentication
         void handleRequestCompleted(const RequestId& requestId_);
 
         std::map<RequestId,RequestHandlerBasePtr>   _activeRequestHandlersList;
-        ConnectionServer                            _connectionServer;
-        ConnectionMessage                           _connectionMessage;
         boost::asio::io_service&                    _ioService;
         unsigned                                    _port;
-
+        ConnectionMessage                           _connectionMessage;
+        ConnectionServer                            _connectionServer;
     };
 }}
 

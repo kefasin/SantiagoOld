@@ -21,7 +21,7 @@ namespace Santiago{ namespace Authentication
         bool changeUserPassword(const std::string& userId_,const std::string& oldPassword_,
                                 const std::string& newPassword_);
         bool addResource(int resId_,std::string userName_,
-                         UserPermission permission_);
+                         Database::UserPermission permission_);
 
     protected:
         
