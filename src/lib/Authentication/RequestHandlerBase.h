@@ -13,7 +13,7 @@ namespace Santiago{ namespace Authentication
     class RequestHandlerBase
     {
     public:
-        typedef std::function<void()> OnCompletedCallbackFn;
+        typedef std::function<void(const RequestId&)> OnCompletedCallbackFn;
 
         RequestHandlerBase(ConnectionServer& connectionServer_
                            ,const OnCompletedCallbackFn& onCompletedCallbackFn_
@@ -31,7 +31,7 @@ namespace Santiago{ namespace Authentication
         ConnectionServer&              _connectionServer;
         OnCompletedCallbackFn          _onCompletedCallbackFn;
         ServerMessage                  _initiatingMessage;
-        ServerData                    _serverData;
+        ServerData                     _serverData;
 
         DatabaseInterface              _databaseInterface; 
 
