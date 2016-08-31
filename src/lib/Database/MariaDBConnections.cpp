@@ -125,7 +125,8 @@ namespace Santiago{ namespace Database
         
         if(_userProfileId)
         {
-            std::string checkUserId = "SELECT COALESCE(MAX(ID), 0) FROM USER_PROFILE WHERE USERNAME = '" + userName_ + "'";
+           std::string checkUserId =
+               "SELECT COALESCE(MAX(ID), 0) FROM USER_PROFILE WHERE USERNAME = '" + userName_ + "'";
             
             if (mysql_query(con, checkUserId.c_str()))
             {
