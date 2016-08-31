@@ -46,5 +46,5 @@ namespace Santiago{ namespace Authentication
         OnNewRequestCallbackFn                           _onNewRequestCallbackFn;
         OnRequestReplyCallbackFn                         _onRequestReplyCallbackFn;
     };
-}
+    }}
 #endif
