@@ -56,27 +56,27 @@ namespace Santiago{ namespace Authentication
             
         case ConnectionMessageType::CR_LOGOUT_USER_FOR_COOKIE:
             requestHandlerPtr.reset(new LogoutUserForCookieRequestHandler
-                                                     (_connectionServer
-                                                      ,std::bind(&Server::handleRequestCompleted
-                                                                ,this,std::placeholders::_1)
-                                                      ,message_));
+                                    (_connectionServer
+                                     ,std::bind(&Server::handleRequestCompleted
+                                                ,this,std::placeholders::_1)
+                                     ,message_));
             break;
             
         case ConnectionMessageType::CR_LOGOUT_USER_FOR_ALL_COOKIES:
             requestHandlerPtr.reset(new LogoutUserForAllCookiesRequestHandler
-                                                    (_connectionServer
-                                                     ,std::bind(&Server::handleRequestCompleted
-                                                                ,this,std::placeholders::_1)
-                                                     ,message_));
+                                    (_connectionServer
+                                     ,std::bind(&Server::handleRequestCompleted
+                                                ,this,std::placeholders::_1)
+                                     ,message_));
             break;
             
         case  ConnectionMessageType::CR_CHANGE_USER_PASSWORD:
             requestHandlerPtr.reset(new ChangeUserPasswordRequestHandler
-                                                     (_connectionServer
-                                                      ,std::bind(&Server::handleRequestCompleted
-                                                                 ,this,std::placeholders::_1)
-                                                      ,message_));
-             break;
+                                    (_connectionServer
+                                     ,std::bind(&Server::handleRequestCompleted
+                                                ,this,std::placeholders::_1)
+                                     ,message_));
+            break;
         case ConnectionMessageType::CR_REMOVED_COOKIE_FROM_APPSERVER:
             requestHandlerPtr.reset(new RemovedCookieFromAppserverRequestHandler
                                     (_connectionServer
