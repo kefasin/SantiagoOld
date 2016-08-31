@@ -101,7 +101,8 @@ namespace Santiago{ namespace Database
         _permissionId = atoi(row3[0]);
         
         _permission =
-            {{UserPermission::READ, "READ"},
+            {{UserPermission::OWNER, "OWNER"}, 
+             {UserPermission::READ, "READ"},
              {UserPermission::WRITE, "WRITE"},
              {UserPermission::READ_WRITE, "READ_WRITE"}};
     }
@@ -623,7 +624,8 @@ namespace Santiago{ namespace Database
         Permission record;
         std::vector<Permission> records;
         std::map<std::string, UserPermission> permission =
-            {{"READ", UserPermission::READ},
+            {{"OWNER", UserPermission::OWNER}, 
+             {"READ", UserPermission::READ},
              {"WRITE", UserPermission::WRITE},
              {"READ_WRITE", UserPermission::READ_WRITE}};
         
