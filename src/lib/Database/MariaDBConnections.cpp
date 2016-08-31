@@ -336,18 +336,18 @@ namespace Santiago{ namespace Database
         sessionId << _sessionId;
             
         std::map<std::string, std::string> months
-        {{ "Jan", "01"},
-            { "Feb", "02"},
-            { "Mar", "03"},
-            { "Apr", "04"},
-            { "May", "05"},
-            { "Jun", "06"},
-            { "Jul", "07"},
-            { "Aug", "08"},
-            { "Sep", "09"},
-            { "Oct", "10"},
-            { "Nov", "11"},
-            { "Dec", "12"}
+        {{"Jan", "01"},
+         {"Feb", "02"},
+         {"Mar", "03"},
+         {"Apr", "04"},
+         {"May", "05"},
+         {"Jun", "06"},
+         {"Jul", "07"},
+         {"Aug", "08"},
+         {"Sep", "09"},
+         {"Oct", "10"},
+         {"Nov", "11"},
+         {"Dec", "12"}
         };
         
         std::stringstream loginTime;
@@ -385,18 +385,18 @@ namespace Santiago{ namespace Database
         }
         
         std::map<std::string, std::string> months
-        {{ "Jan", "01"},
-            { "Feb", "02"},
-            { "Mar", "03"},
-            { "Apr", "04"},
-            { "May", "05"},
-            { "Jun", "06"},
-            { "Jul", "07"},
-            { "Aug", "08"},
-            { "Sep", "09"},
-            { "Oct", "10"},
-            { "Nov", "11"},
-            { "Dec", "12"}
+        {{"Jan", "01"},
+         {"Feb", "02"},
+         {"Mar", "03"},
+         {"Apr", "04"},
+         {"May", "05"},
+         {"Jun", "06"},
+         {"Jul", "07"},
+         {"Aug", "08"},
+         {"Sep", "09"},
+         {"Oct", "10"},
+         {"Nov", "11"},
+         {"Dec", "12"}
         };
         
         std::stringstream logoutTime;
@@ -541,18 +541,18 @@ namespace Santiago{ namespace Database
         std::vector<Session> records;
         
         std::map<std::string, std::string> months
-        {{ "01", "Jan",},
-            { "02", "Feb"},
-            { "03", "Mar"},
-            { "04", "Apr"},
-            { "05", "May"},
-            { "06", "Jun"},
-            { "07", "Jul"},
-            { "08", "Aug"},
-            { "09", "Sep"},
-            { "10", "Oct"},
-            { "11", "Nov"},
-            { "12", "Dec"}
+        {{"01", "Jan"},
+         {"02", "Feb"},
+         {"03", "Mar"},
+         {"04", "Apr"},
+         {"05", "May"},
+         {"06", "Jun"},
+         {"07", "Jul"},
+         {"08", "Aug"},
+         {"09", "Sep"},
+         {"10", "Oct"},
+         {"11", "Nov"},
+         {"12", "Dec"}
         };
         
         while ((row = mysql_fetch_row(result))) 
