@@ -3,16 +3,13 @@
 
 #include <string>
 
-//#include <boost/date_time/gregorian/greg_date.hpp>
-#include <boost/date_time/posix_time/ptime.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
-//#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 namespace Santiago{ namespace Database
 {
     using namespace boost::posix_time;
-    //using namespace boost::gregorian;
-
+    using namespace boost::gregorian;
     
     enum UserPermission 
     {
