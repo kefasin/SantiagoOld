@@ -5,7 +5,7 @@ namespace Santiago{ namespace Database
     MariaDBConnections::MariaDBConnections()
     {
         MYSQL* con1 = mysql_init(NULL);
-    
+        
         if (con1 == NULL) 
         {
             exit(1);
@@ -17,13 +17,13 @@ namespace Santiago{ namespace Database
             mysql_close(con1);
             exit(1);
         }
-
+        
         if (mysql_query(con1, "SELECT COALESCE(MAX(ID), 0) FROM USER_PROFILE"))
         {
             mysql_close(con1);
             exit(1);
         }
-
+        
         MYSQL_RES *result1 = mysql_store_result(con1);
         MYSQL_ROW row1;
         
@@ -42,7 +42,7 @@ namespace Santiago{ namespace Database
         {
             exit(1);
         }
-    
+        
         if (mysql_real_connect(con2, "localhost", "root", "kefas123", 
                                "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
         {
@@ -121,7 +121,7 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return 0;
         }
-
+        
         if(_userProfileId)
         {
             std::string checkUserId = "SELECT COALESCE(MAX(ID), 0) FROM USER_PROFILE WHERE USERNAME = '" + userName_ + "'";
@@ -131,7 +131,7 @@ namespace Santiago{ namespace Database
                 mysql_close(con);
                 return 0;
             }
-
+            
             MYSQL_RES *result = mysql_store_result(con);
             
             if (result == NULL) 
@@ -139,7 +139,7 @@ namespace Santiago{ namespace Database
                 mysql_close(con);
                 return 0;
             }
-        
+            
             MYSQL_ROW row;
             row = mysql_fetch_row(result);
             
@@ -181,7 +181,7 @@ namespace Santiago{ namespace Database
         mysql_close(con);
         return 1;
     }
-
+    
     bool MariaDBConnections::checkUserProfileRecord(const std::string userId_, const std::string password_)
     {
         MYSQL* con = mysql_init(NULL);
@@ -249,7 +249,7 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return 0;
         }
-
+        
         std::string checkOldPassword = "SELECT PASSWORD FROM USER_PROFILE WHERE USERNAME='" + userId_ + "'";
         
         if(mysql_query(con, checkOldPassword.c_str()))
@@ -257,7 +257,7 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return 0;
         }
-
+        
         MYSQL_RES *result = mysql_store_result(con);
         
         if (result == NULL) 
@@ -268,7 +268,7 @@ namespace Santiago{ namespace Database
         
         MYSQL_ROW row;
         row = mysql_fetch_row(result);
-
+        
         if(row)
         {
             if(oldPassword_ != row[0])
@@ -335,19 +335,19 @@ namespace Santiago{ namespace Database
         sessionId << _sessionId;
             
         std::map<std::string, std::string> months
-                                 {{ "Jan", "01"},
-                                  { "Feb", "02"},
-                                  { "Mar", "03"},
-                                  { "Apr", "04"},
-                                  { "May", "05"},
-                                  { "Jun", "06"},
-                                  { "Jul", "07"},
-                                  { "Aug", "08"},
-                                  { "Sep", "09"},
-                                  { "Oct", "10"},
-                                  { "Nov", "11"},
-                                  { "Dec", "12"}
-                                 };
+        {{ "Jan", "01"},
+            { "Feb", "02"},
+            { "Mar", "03"},
+            { "Apr", "04"},
+            { "May", "05"},
+            { "Jun", "06"},
+            { "Jul", "07"},
+            { "Aug", "08"},
+            { "Sep", "09"},
+            { "Oct", "10"},
+            { "Nov", "11"},
+            { "Dec", "12"}
+        };
         
         std::stringstream loginTime;
         loginTime << loginTime_;
@@ -382,21 +382,21 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return 0;
         }
-
+        
         std::map<std::string, std::string> months
-                                 {{ "Jan", "01"},
-                                  { "Feb", "02"},
-                                  { "Mar", "03"},
-                                  { "Apr", "04"},
-                                  { "May", "05"},
-                                  { "Jun", "06"},
-                                  { "Jul", "07"},
-                                  { "Aug", "08"},
-                                  { "Sep", "09"},
-                                  { "Oct", "10"},
-                                  { "Nov", "11"},
-                                  { "Dec", "12"}
-                                 };
+        {{ "Jan", "01"},
+            { "Feb", "02"},
+            { "Mar", "03"},
+            { "Apr", "04"},
+            { "May", "05"},
+            { "Jun", "06"},
+            { "Jul", "07"},
+            { "Aug", "08"},
+            { "Sep", "09"},
+            { "Oct", "10"},
+            { "Nov", "11"},
+            { "Dec", "12"}
+        };
         
         std::stringstream logoutTime;
         logoutTime << logoutTime_;
@@ -512,7 +512,7 @@ namespace Santiago{ namespace Database
         {
             return empty;
         }    
-            
+        
         if (mysql_real_connect(con, "localhost", "root", "kefas123", 
                                "databaseName", 0, NULL, 0) == NULL) //replace kefas123 with MariaDB password
         {
@@ -540,19 +540,19 @@ namespace Santiago{ namespace Database
         std::vector<Session> records;
         
         std::map<std::string, std::string> months
-                                 {{ "01", "Jan",},
-                                  { "02", "Feb"},
-                                  { "03", "Mar"},
-                                  { "04", "Apr"},
-                                  { "05", "May"},
-                                  { "06", "Jun"},
-                                  { "07", "Jul"},
-                                  { "08", "Aug"},
-                                  { "09", "Sep"},
-                                  { "10", "Oct"},
-                                  { "11", "Nov"},
-                                  { "12", "Dec"}
-                                 };
+        {{ "01", "Jan",},
+            { "02", "Feb"},
+            { "03", "Mar"},
+            { "04", "Apr"},
+            { "05", "May"},
+            { "06", "Jun"},
+            { "07", "Jul"},
+            { "08", "Aug"},
+            { "09", "Sep"},
+            { "10", "Oct"},
+            { "11", "Nov"},
+            { "12", "Dec"}
+        };
         
         while ((row = mysql_fetch_row(result))) 
         { 
@@ -617,7 +617,7 @@ namespace Santiago{ namespace Database
             mysql_close(con);
             return empty;
         }
-    
+        
         int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
         Permission record;
