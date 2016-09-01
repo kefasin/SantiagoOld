@@ -6,9 +6,11 @@
 #include <string>
 
 #include "Database/MariaDBConnections.h"
+#include "ServerData.h"
 
 namespace Santiago{ namespace Authentication
 {
+    using namespace boost::posix_time;
     class DatabaseInterface
     {
     public:
@@ -26,6 +28,7 @@ namespace Santiago{ namespace Authentication
     protected:
         
         Database::MariaDBConnections            _databaseConnector;
+        ServerData                              _serverData;
         
 
     };

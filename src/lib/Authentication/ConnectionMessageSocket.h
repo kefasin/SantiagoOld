@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 #include <functional>
+#include <ostream>
 
 //#include <boost/asio/strand.hpp> //strand disabled for now
 #include <boost/asio.hpp>
@@ -28,7 +29,7 @@ namespace Santiago{ namespace Authentication
         typedef boost::asio::ip::tcp::socket MySocket;
         typedef std::shared_ptr<MySocket> MySocketPtr;
 
-        typedef std::function<void()> OnDisconnectCallbackFn;
+        typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
         typedef std::function<void(const RequestId&,const ConnectionMessage&)> OnMessageCallbackFn;
 
         ConnectionMessageSocket(const MySocketPtr& socketPtr_,

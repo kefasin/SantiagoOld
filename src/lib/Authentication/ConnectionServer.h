@@ -21,12 +21,13 @@ namespace Santiago{ namespace Authentication
         typedef std::function<void(unsigned)> OnDisconnectCallbackFn;
         
         ConnectionServer(boost::asio::io_service& ioService_,
-                         int port_,
+                         unsigned port_,
                          const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                          const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
                          const OnRequestReplyCallbackFn& onRequestReplyCallbackFn_);
 
         void start();
+        void sendMessage(const ServerMessage& serverMessage_);
         
     protected:
         
@@ -35,16 +36,19 @@ namespace Santiago{ namespace Authentication
 
         void handleDisconnect(unsigned connectionId_);
 
-        void sendMessage(const ServerMessage& serverMessage_);
        
         
-        tcp::acceptor                                    _acceptor;
-        std::map<unsigned,ConnectionRequestsController>  _idConnectionPtrMap;
-        unsigned                                         _nextConnectionId;
+        tcp::acceptor                                      _acceptor;
 
-        OnDisconnectCallbackFn                           _onDisconnectCallbackFn;
-        OnNewRequestCallbackFn                           _onNewRequestCallbackFn;
-        OnRequestReplyCallbackFn                         _onRequestReplyCallbackFn;
+        OnDisconnectCallbackFn                             _onDisconnectCallbackFn;
+        OnNewRequestCallbackFn                             _onNewRequestCallbackFn;
+        OnRequestReplyCallbackFn                           _onRequestReplyCallbackFn;
+
+        unsigned                                           _nextConnectionId;
+        
+        std::map<unsigned,ConnectionRequestsControllerPtr> _idConnectionPtrMap;
+
+       
     };
-    }}
+}}
 #endif

@@ -6,6 +6,33 @@ namespace Santiago{ namespace Authentication
         :_initiatingConnectionId(initiatingConnectionId_)
         ,_requestNo(requestNo_)
     {}
+
+    bool RequestId::operator<(const RequestId& rhs_) const
+    {
+        if(this->_initiatingConnectionId < rhs_._initiatingConnectionId)
+        {
+            return true;
+        }
+        else if(this->_initiatingConnectionId > rhs_._initiatingConnectionId)
+        {
+            return false;
+        }
+        else
+        {
+            if(this->_requestNo < rhs_._requestNo)
+            {
+                return true;
+            }
+            else if(this->_requestNo < rhs_._requestNo)
+            {
+                return false;
+            }
+            else
+            {
+                BOOST_ASSERT(false);
+            }
+        }
+    }
    
     ServerMessage::ServerMessage(unsigned connectionId_,
                                  const RequestId& requestId_,

@@ -37,14 +37,16 @@ namespace Santiago{ namespace Authentication
             if(_inputBuffer.size() >= messageSize)
             {
                 _inputBuffer.consume(sizeof(unsigned));
-                RequestId requestId;
-                requestId._initiatingConnectionId = *(reinterpret_cast<const unsigned*>
-                                                      (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
+                unsigned  initiatingConnectionId = *(reinterpret_cast<const unsigned*>
+                                                     (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
                 _inputBuffer.consume(sizeof(unsigned));
-                requestId._requestNo = *(reinterpret_cast<const unsigned*>
+                
+                unsigned  requestNo =  *(reinterpret_cast<const unsigned*>
                                          (boost::asio::buffer_cast<const char*>(_inputBuffer.data())));
                 _inputBuffer.consume(sizeof(unsigned));
                 
+                RequestId requestId(initiatingConnectionId,requestNo);
+                 
                 const char* inputBufferData = boost::asio::buffer_cast<const char*>(_inputBuffer.data());
                 ConnectionMessage message(inputBufferData,messageSize-12);
                 _inputBuffer.consume(messageSize-12);
@@ -78,7 +80,7 @@ namespace Santiago{ namespace Authentication
     void ConnectionMessageSocket::close()
     {
         _socketPtr.reset();
-        _onDisconnectCallbackFn();
+        // _onDisconnectCallbackFn(1);
     }
 
     void ConnectionMessageSocket::sendMessage(const RequestId& requestId_,const ConnectionMessage& message_)
@@ -92,10 +94,10 @@ namespace Santiago{ namespace Authentication
         unsigned bufSize = sizeof(unsigned) + sizeof(unsigned) + sizeof(unsigned)+ message_.getSize();
         boost::asio::streambuf outputBuffer;
         std::ostream outStream(&outputBuffer);
-        outStream_.write(reinterpret_cast<const char*>(&bufSize), sizeof(bufSize));
-        outStream_.write(reinterpret_cast<const char*>(&requestId_._initiatingConnectionId),
+        outStream.write(reinterpret_cast<const char*>(&bufSize), sizeof(bufSize));
+        outStream.write(reinterpret_cast<const char*>(&requestId_._initiatingConnectionId),
                          sizeof(requestId_._initiatingConnectionId));
-        outStream_.write(reinterpret_cast<const char*>(&requestId_._requestNo), sizeof(requestId_._requestNo));
+        outStream.write(reinterpret_cast<const char*>(&requestId_._requestNo), sizeof(requestId_._requestNo));
         // outStream<<message_;
         message_.writeToStream(outStream);
 

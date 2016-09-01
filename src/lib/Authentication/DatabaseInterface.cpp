@@ -45,7 +45,9 @@ namespace Santiago{ namespace Authentication
     {    
         //TODO: if the verify call from another connection add that connection to the _userIdUserIdDataMap   
         ptime loginTime = second_clock::local_time();
-        _databaseConnector.addSessionRecord(_cookieCookieDataMap[cookie_]._userId, cookie_, loginTime);
+        
+        CookieData cookieData = _serverData._cookieCookieDataMap.find(cookie_)->second;     
+        _databaseConnector.addSessionRecord(cookieData._userId, cookie_, loginTime);
         return 1;
     }
     // TODO: 
@@ -80,7 +82,7 @@ namespace Santiago{ namespace Authentication
     }
 
     bool DatabaseInterface::addResource(int resId_,std::string userName_,
-                                        UserPermission permission_)
+                                        Database::UserPermission permission_)
     {
         if(_databaseConnector.addPermissionRecord(resId_,userName_,permission_))
         {

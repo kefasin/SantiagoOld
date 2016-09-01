@@ -37,10 +37,12 @@ namespace Santiago{ namespace Authentication
         void handleConnectionMessageSocketMessage(const RequestId& requestId_, const ConnectionMessage& message_);
 
         unsigned                      _connectionId;
-        ConnectionMessageSocket       _connectionmessagesocket;
+
         OnDisconnectCallbackFn        _onDisconnectCallbackFn;
         OnNewRequestCallbackFn        _onNewRequestCallbackFn;
         OnRequestReplyCallbackFn      _onRequestReplyCallbackFn;
+
+        ConnectionMessageSocket       _connectionMessageSocket;
 
         std::map<RequestId,unsigned>  _replyPendingRequestList; //the pair.second gives the number of pending replies
 

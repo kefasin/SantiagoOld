@@ -13,7 +13,7 @@ namespace Santiago{ namespace Authentication
         ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
         ,_onNewRequestCallbackFn(onNewRequestCallbackFn_)
         ,_onRequestReplyCallbackFn(onRequestReplyCallbackFn_)
-        ,_nextconnectionId(1)
+        ,_nextConnectionId(1)
     {}
     
     void ConnectionServer::start()
@@ -28,25 +28,26 @@ namespace Santiago{ namespace Authentication
     void ConnectionServer::handleAccept(const ConnectionMessageSocket::MySocketPtr& socketPtr_,
                                         const boost::system::error_code& error_)
     {
-        
-        ConnectionRequestsControllerPtr newConnection(new ConnectionRequestsController(_nextconnectionId
-                                                                                       ,socketPtr_
-                                                                                       ,_onDisconnectCallbackFn
-                                                                                       ,_onNewRequestCallbackFn
-                                                                                       ,_onRequestReplyCallbackFn));
+        ConnectionRequestsControllerPtr newConnection(new ConnectionRequestsController(
+                                                          _nextConnectionId
+                                                          ,socketPtr_
+                                                          ,_onDisconnectCallbackFn
+                                                          ,_onNewRequestCallbackFn
+                                                          ,_onRequestReplyCallbackFn));
         BOOST_ASSERT(_idConnectionPtrMap.find(_nextConnectionId) == _idConnectionPtrMap.end());
-        _idConnectionPtrMap[_nextConnectionId] = newConnection;
+        _idConnectionPtrMap.insert(std::make_pair(_nextConnectionId,newConnection));
+        //_idConnectionPtrMap[_nextConnectionId] = newConnection;
         // newConnection->start();
         ++_nextConnectionId;
     }
 
-    void ConnectionServer handleDisconnect(unsigned connectionId_)
+    void ConnectionServer::handleDisconnect(unsigned connectionId_)
     {
-         std::map< std::map<unsigned,ConnectionRequestController>>::iterator iter =
-             _idConnectionPtrMap.find(connectionId_);
-         
-         BOOST_ASSERT(iter == _idConnectionPtrMap.end());
-         _idConnectionPtrMap.erase(iter);
+        std::map<unsigned,ConnectionRequestsControllerPtr>::iterator iter =
+            _idConnectionPtrMap.find(connectionId_);
+        
+        BOOST_ASSERT(iter == _idConnectionPtrMap.end());
+        _idConnectionPtrMap.erase(iter);
     }
     
     

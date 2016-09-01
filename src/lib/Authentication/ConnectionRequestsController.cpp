@@ -13,14 +13,22 @@ namespace Santiago{ namespace Authentication
         ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
         ,_onNewRequestCallbackFn(onNewRequestCallbackFn_)
         ,_onRequestReplyCallbackFn(onRequestReplyCallbackFn_)
+        ,_connectionMessageSocket(socketPtr_,
+                                  _onDisconnectCallbackFn,
+                                  std::bind(
+                                      &ConnectionRequestsController::handleConnectionMessageSocketMessage,
+                                      this,
+                                      std::placeholders::_1,
+                                      std::placeholders::_2))
     {
-         std::function<void(const ConnectionMessage)> onMessageCallbackFn = 
-             std::bind(&ConnectionRequestsController:: handleConnectionMessageSocketMessage,this,
-                       std::placeholders::_1,std::placeholders::_2);
-          ConnectionMessageSocketPtr newConnectionMessageSocket(new ConnectionMessageSocket
-                                                                (socketPtr_,_onDisconnectCallbackFn,
-                                                                 onMessageCallbackFn));
-          newConnectionMessageSocket->start();
+        /* std::function<void(const ConnectionMessage)> onMessageCallbackFn = 
+            std::bind(&ConnectionRequestsController::handleConnectionMessageSocketMessage,this,
+                      std::placeholders::_1,std::placeholders::_2);
+        ConnectionMessageSocketPtr newConnectionMessageSocket(new ConnectionMessageSocket
+                                                              (socketPtr_,_onDisconnectCallbackFn,
+                                                               onMessageCallbackFn));
+                                                               newConnectionMessageSocket->start();*/
+        _connectionMessageSocket.start();
     } 
 
 
@@ -32,7 +40,8 @@ namespace Santiago{ namespace Authentication
             RequestId requestId = _replyPendingRequestList.begin()->first;
             _replyPendingRequestList.erase(_replyPendingRequestList.begin());
             
-            ServerMessage serverMessage(_connectionId, requestId, ServerMessage::CONNECTION_DISCONNECT,boost::none);
+            ServerMessage serverMessage(_connectionId, requestId,
+                                        ServerMessageType::CONNECTION_DISCONNECT,boost::none);
             _onRequestReplyCallbackFn(serverMessage);
         }
         _onDisconnectCallbackFn(_connectionId);
@@ -71,7 +80,7 @@ namespace Santiago{ namespace Authentication
                                         ServerMessageType::CONNECTION_MESSAGE_NEW,
                                         message_);
 
-            _onRequestNewCallbackFn(serverMessage);
+            _onNewRequestCallbackFn(serverMessage);
         }
     }
     
@@ -80,7 +89,7 @@ namespace Santiago{ namespace Authentication
         BOOST_ASSERT(message_._connectionMessage);
         if(ServerMessageType::CONNECTION_MESSAGE_NEW == message_._type)
         {
-            std::map<RequestId,unsigned>::iterator iter = _replyPendingRequestList.find(requestId_);
+            std::map<RequestId,unsigned>::iterator iter = _replyPendingRequestList.find(message_._requestId);
             if(_replyPendingRequestList.end() == iter)
             {
                 _replyPendingRequestList[message_._requestId] = 1;
@@ -92,7 +101,7 @@ namespace Santiago{ namespace Authentication
         }
         else
         {
-            _connectionmessagesocket.sendMessage(message_._requestId,*message_._connectionMessage);
+            _connectionMessageSocket.sendMessage(message_._requestId,*message_._connectionMessage);
         }
     }
 

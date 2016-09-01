@@ -15,7 +15,7 @@ namespace Santiago{ namespace Authentication
          */
         RequestId(unsigned _initiatingConnectionId,unsigned _requestNo);
 
-        bool operator<(const RequestId& rhs_);
+        bool operator<(const RequestId& rhs_) const;
 
         unsigned  _initiatingConnectionId;
         unsigned  _requestNo;
