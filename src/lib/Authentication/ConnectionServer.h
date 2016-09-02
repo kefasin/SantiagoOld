@@ -28,6 +28,8 @@ namespace Santiago{ namespace Authentication
 
         void start();
         void sendMessage(const ServerMessage& serverMessage_);
+
+        unsigned                                           _nextConnectionId;
         
     protected:
         
@@ -44,7 +46,6 @@ namespace Santiago{ namespace Authentication
         OnNewRequestCallbackFn                             _onNewRequestCallbackFn;
         OnRequestReplyCallbackFn                           _onRequestReplyCallbackFn;
 
-        unsigned                                           _nextConnectionId;
         
         std::map<unsigned,ConnectionRequestsControllerPtr> _idConnectionPtrMap;
 

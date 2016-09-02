@@ -2,6 +2,7 @@
 #define SANTIAGO_AUTHENTICATION_CONNECTIONCONTROLLER_H
 
 #include <functional>
+#include <algorithm>
 
 #include "ServerMessage.h"
 #include "DatabaseInterface.h"

@@ -9,11 +9,11 @@ namespace Santiago{ namespace Authentication
                                        const OnDisconnectCallbackFn& onDisconnectCallbackFn_,
                                        const OnNewRequestCallbackFn& onNewRequestCallbackFn_,
                                        const OnRequestReplyCallbackFn& onRequestReplyCallbackFn_)
-        :_acceptor(ioService_, tcp::endpoint(tcp::v4(),port_))
+        :_nextConnectionId(1)
+        ,_acceptor(ioService_, tcp::endpoint(tcp::v4(),port_))
         ,_onDisconnectCallbackFn(onDisconnectCallbackFn_)
         ,_onNewRequestCallbackFn(onNewRequestCallbackFn_)
         ,_onRequestReplyCallbackFn(onRequestReplyCallbackFn_)
-        ,_nextConnectionId(1)
     {}
     
     void ConnectionServer::start()

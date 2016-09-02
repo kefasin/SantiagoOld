@@ -3,35 +3,38 @@
 namespace Santiago{ namespace Authentication
 {
 
-    LoginUserRequestHandler::LoginURequestHandler(ConnectionServer& connectionServer_
-                                                            ,const OnCompletedCallbackFn& onCompletedCallbackFn_
-                                                            ,const ServerMessage& initiatingMessage_)
+    LoginUserRequestHandler::LoginUserRequestHandler(ConnectionServer& connectionServer_
+                                                     ,const OnCompletedCallbackFn& onCompletedCallbackFn_
+                                                     ,const ServerMessage& initiatingMessage_)
         :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
     {}
     
-    virtual void LoginUserRequestHandler::start()
+    void LoginUserRequestHandler::start()
     {
-        if(_databaseInterface.loginUser(_initiatingMessage._connectionMessage._parameters[0]
-                                        ,_initiatingMessage._connectionMessage._parameters[1]))
+        if(_databaseInterface.loginUser(_initiatingMessage._connectionMessage->_parameters[0]
+                                        ,_initiatingMessage._connectionMessage->_parameters[1]))
         {
+            ConnectionMessage connectionMessage(ConnectionMessageType::SUCCEEDED,std::vector<std::string>()); 
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
-                                        ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
-                                        ,_initiatingMessage->_connectionMessage(SUCCEEDED,std::vector<std::string>));
-            
+                                        ,ServerMessageType::CONNECTION_MESSAGE_REPLY
+                                        ,connectionMessage);
             _connectionServer.sendMessage(serverMessage);
             _onCompletedCallbackFn(_initiatingMessage._requestId);
         }
         else
         {
+            ConnectionMessage connectionMessage(ConnectionMessageType::FAILED,std::vector<std::string>()); 
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
-                                        ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
-                                        ,_initiatingMessage->_connectionMessage(FAILED,std::vector<std::string>));
+                                        ,ServerMessageType::CONNECTION_MESSAGE_REPLY
+                                        ,connectionMessage);
+            _connectionServer.sendMessage(serverMessage);
+            _onCompletedCallbackFn(_initiatingMessage._requestId);
         }
     }
     
-    virtual void LoginUserRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
+    void LoginUserRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
     {
         BOOST_ASSERT(false);
     }

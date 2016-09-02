@@ -81,10 +81,14 @@ namespace Santiago{ namespace Authentication
         }
     }
 
-    bool DatabaseInterface::addResource(int resId_,std::string userName_,
+    bool DatabaseInterface::addResource(std::string resId_,std::string userName_,
                                         Database::UserPermission permission_)
     {
-        if(_databaseConnector.addPermissionRecord(resId_,userName_,permission_))
+        std::stringstream resId;
+        resId<<resId_;
+        int newResId;
+        resId>>newResId;
+        if(_databaseConnector.addPermissionRecord(newResId,userName_,permission_))
         {
             return 1;
         }

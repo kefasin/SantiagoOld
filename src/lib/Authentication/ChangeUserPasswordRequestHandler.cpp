@@ -9,31 +9,34 @@ namespace Santiago{ namespace Authentication
        :RequestHandlerBase(connectionServer_,onCompletedCallbackFn_,initiatingMessage_)
    {}
     
-    virtual void ChangeUserPasswordRequestHandler::start()
+    void ChangeUserPasswordRequestHandler::start()
     {
-        if(_databaseInterface.changeUserPassword(_initiatingMessage._connectionMessage._parameters[0],
-                                                 _initiatingMessage._connectionMessage._parameters[1],
-                                                 _initiatingMessage._connectionMessage._parameters[2]))
+        if(_databaseInterface.changeUserPassword(_initiatingMessage._connectionMessage->_parameters[0],
+                                                 _initiatingMessage._connectionMessage->_parameters[1],
+                                                 _initiatingMessage._connectionMessage->_parameters[2]))
         {
+            ConnectionMessage connectionMessage(ConnectionMessageType::SUCCEEDED,std::vector<std::string>()); 
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
-                                        ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
-                                        ,_initiatingMessage->_connectionMessage(SUCCEEDED,std::vector<std::string>));
-
+                                        ,ServerMessageType::CONNECTION_MESSAGE_REPLY
+                                        ,connectionMessage);
+            
             _connectionServer.sendMessage(serverMessage);
             _onCompletedCallbackFn(_initiatingMessage._requestId);
         }
-        
         else
         {
+            ConnectionMessage connectionMessage(ConnectionMessageType::FAILED,std::vector<std::string>()); 
             ServerMessage serverMessage(_initiatingMessage._connectionId
                                         ,_initiatingMessage._requestId
-                                        ,_initiatingMessage._type.CONNECTION_MESSAGE_REPLY
-                                        ,_initiatingMessage->_connectionMessage(FAILED,std::vector<std::string>));
+                                        ,ServerMessageType::CONNECTION_MESSAGE_REPLY
+                                        ,connectionMessage);
+            _connectionServer.sendMessage(serverMessage);
+            _onCompletedCallbackFn(_initiatingMessage._requestId);
         }   
     }
     
-    virtual void ChangeUserPasswordRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
+    void ChangeUserPasswordRequestHandler::handleReplyMessage(const ServerMessage& serverMessage)
     {
         BOOST_ASSERT(false);
     }

@@ -486,7 +486,7 @@ namespace Santiago{ namespace Database
             return empty;
         }
         
-        int num_fields = mysql_num_fields(result);
+        //  int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
         UserProfile record;
         std::vector<UserProfile> records;
@@ -536,7 +536,7 @@ namespace Santiago{ namespace Database
             return empty;
         }
         
-        int num_fields = mysql_num_fields(result);
+        //  int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
         Session record;
         std::vector<Session> records;
@@ -620,7 +620,7 @@ namespace Santiago{ namespace Database
             return empty;
         }
         
-        int num_fields = mysql_num_fields(result);
+        //   int num_fields = mysql_num_fields(result);
         MYSQL_ROW row;
         Permission record;
         std::vector<Permission> records;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include <string>
+#include <sstream>
 
 #include "Database/MariaDBConnections.h"
 #include "ServerData.h"
@@ -22,7 +23,7 @@ namespace Santiago{ namespace Authentication
         bool logoutUserForAllCookies(const std::string& userId_);
         bool changeUserPassword(const std::string& userId_,const std::string& oldPassword_,
                                 const std::string& newPassword_);
-        bool addResource(int resId_,std::string userName_,
+        bool addResource(std::string resId_,std::string userName_,
                          Database::UserPermission permission_);
 
     protected:
