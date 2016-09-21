@@ -5,7 +5,7 @@ Santiago project is aimed at creating a C++ based web application framework.
 
 Currently it only implements the fastcgi protocol connector and a minimal application server. Its boost asio based asynchronous request handling system is designed to solve the c10k problem. It is designed to enable easy creation of new asynchronous services(like authentication service,database service etc.). It exposes the underlying boost asio api in a safe manner so as to enable users to use the existing asio facilities to create these services.  
 
-If you have any feedback or find this useful please send me a mail at wil.pazhorickal@gmail.com. It would be a great encouragement for me to continue on the project.
+If you have any feedback or find this useful please send me a mail at wilson@kefassoftwares.com. It would be a great encouragement for us to continue on the project.
 
 Tasks
 -----
@@ -44,7 +44,7 @@ d) Server async timer service: Makes a test timer service using the underlying b
 
 License
 -------
-Copyright 2012, 2013 Wilson Sunny Philip [wil.pazhorickal@gmail.com]
+Copyright 2012, 2013 Wilson Sunny Philip [wilson@kefassoftwares.com]
 
 Santiago is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
